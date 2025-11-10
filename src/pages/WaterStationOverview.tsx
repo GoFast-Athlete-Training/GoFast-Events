@@ -96,11 +96,11 @@ const WaterStationOverview = () => {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-500 mt-0.5">•</span>
-              <span>Fill cups with half Gatorade and half water</span>
+              <span>Fill cups with water and Gatorade (have both options ready)</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-500 mt-0.5">•</span>
-              <span>Plan for 16 boys - have enough cups ready</span>
+              <span>Plan for 16 boys - have about 30 cups total ready (15 water, 15 Gatorade)</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-500 mt-0.5">•</span>
@@ -108,10 +108,10 @@ const WaterStationOverview = () => {
             </li>
           </ul>
           <div className="mt-3 p-3 bg-white rounded-lg border border-blue-200">
-            <p className="text-xs font-medium text-blue-900 mb-1">💡 Hydration Mix</p>
+            <p className="text-xs font-medium text-blue-900 mb-1">💡 Cup Setup</p>
             <p className="text-xs text-blue-700">
-              Fill cups with <strong>half Gatorade and half water</strong> to provide both hydration and energy. 
-              Plan for 16 boys, so have plenty of cups ready!
+              Have <strong>about 30 cups total</strong> - <strong>15 filled with water</strong> and <strong>15 filled with Gatorade</strong>. 
+              This gives runners a choice and covers all bases. Plan for 16 boys, so having extra ensures everyone gets hydrated!
             </p>
           </div>
         </section>
