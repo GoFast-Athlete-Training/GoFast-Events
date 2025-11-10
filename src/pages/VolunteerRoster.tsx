@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Loader2, RefreshCcw, Users } from 'lucide-react';
 import { volunteerRoles } from '../data/volunteerRoles';
 import { buildApiUrl } from '../lib/api';
+import { getEventId } from '../config/eventConfig';
 
 type VolunteerEntry = {
   id: string;
@@ -45,7 +46,13 @@ const VolunteerRoster = () => {
     setErrorMessage(null);
 
     try {
-      const response = await fetch(buildApiUrl('/api/event-volunteer?eventSlug=boys-gotta-run-2025'));
+      // Get eventId from config/localStorage
+      const eventId = getEventId();
+      if (!eventId) {
+        throw new Error('Event ID not configured. Please set eventId in config.');
+      }
+
+      const response = await fetch(buildApiUrl(`/api/event-volunteer?eventId=${eventId}`));
       if (!response.ok) {
         const payload = await response.json().catch(() => null);
         const message =

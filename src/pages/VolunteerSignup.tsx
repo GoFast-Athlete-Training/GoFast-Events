@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, Loader2, ArrowLeft } from 'lucide-react';
 import { activeVolunteerRoles } from '../data/volunteerRoles';
 import { buildApiUrl } from '../lib/api';
+import { mapRoleIdToRoleName } from '../services/UniversalEventMapperService';
+import { getEventId } from '../config/eventConfig';
 
 type FormState = {
   name: string;
@@ -56,16 +58,25 @@ const VolunteerSignup = () => {
     setErrorMessage(null);
 
     try {
+      // Get eventId from config/localStorage
+      const eventId = getEventId();
+      if (!eventId) {
+        throw new Error('Event ID not configured. Please set eventId in config.');
+      }
+
+      // Map role ID to role name string for backend
+      const roleName = mapRoleIdToRoleName(roleId);
+
       const response = await fetch(buildApiUrl('/api/event-volunteer'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          eventSlug: 'boys-gotta-run-2025',
+          eventId: eventId,
           name: name.trim(),
           email: email.trim(),
-          role: roleId,
+          role: roleName, // Mapped role name string
           notes: note.trim() ? note.trim() : undefined,
         }),
       });

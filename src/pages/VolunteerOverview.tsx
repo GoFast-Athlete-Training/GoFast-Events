@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, CalendarDays, MapPin, Medal, Map, ExternalLink } from 'lucide-react';
 import { volunteerRoles } from '../data/volunteerRoles';
-
-const stravaRouteUrl = 'https://www.strava.com/routes/3420808564668746102';
-const stravaRouteId = '3420808564668746102';
+import { EVENT_CONFIG } from '../config/eventConfig';
 
 type RouteInfo = {
   distance?: string;
@@ -53,15 +51,17 @@ const VolunteerOverview = () => {
               <span>Sign Up to Help</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <a
-              href={stravaRouteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-offset-2"
-            >
-              <Map className="h-4 w-4" />
-              <span>View 5K Course Map</span>
-            </a>
+            {EVENT_CONFIG.stravaRouteUrl && (
+              <a
+                href={EVENT_CONFIG.stravaRouteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-offset-2"
+              >
+                <Map className="h-4 w-4" />
+                <span>View 5K Course Map</span>
+              </a>
+            )}
           </div>
         </header>
 
@@ -93,15 +93,17 @@ const VolunteerOverview = () => {
                 </div>
               </div>
             </div>
-            <a
-              href={stravaRouteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2.5 text-sm font-semibold text-blue-600 transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200"
-            >
-              <span>View Full Route</span>
-              <ExternalLink className="h-4 w-4" />
-            </a>
+            {EVENT_CONFIG.stravaRouteUrl && (
+              <a
+                href={EVENT_CONFIG.stravaRouteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2.5 text-sm font-semibold text-blue-600 transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              >
+                <span>View Full Route</span>
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            )}
           </div>
         </section>
 
