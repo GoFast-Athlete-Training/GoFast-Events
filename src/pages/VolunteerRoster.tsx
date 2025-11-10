@@ -32,6 +32,10 @@ const roleLabelMap = volunteerRoles.reduce<Record<string, string>>((acc, role) =
 }, {});
 
 const VolunteerRoster = () => {
+  useEffect(() => {
+    document.title = 'BGR Discovery 5k - Volunteer Roster';
+  }, []);
+
   const [volunteers, setVolunteers] = useState<VolunteerEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -41,18 +45,22 @@ const VolunteerRoster = () => {
     setErrorMessage(null);
 
     try {
-      const response = await fetch(buildApiUrl('/api/volunteer/input'));
+      const response = await fetch(buildApiUrl('/api/event-volunteer?eventSlug=boys-gotta-run-2025'));
       if (!response.ok) {
         const payload = await response.json().catch(() => null);
         const message =
           typeof payload?.error === 'string'
             ? payload.error
-            : 'Unable to load volunteer roster right now.';
+            : payload?.message || 'Unable to load volunteer roster right now.';
         throw new Error(message);
       }
 
-      const payload = (await response.json()) as { data?: VolunteerEntry[] };
-      setVolunteers(payload?.data ?? []);
+      const payload = (await response.json()) as { success?: boolean; data?: VolunteerEntry[] };
+      if (payload.success && payload.data) {
+        setVolunteers(payload.data);
+      } else {
+        setVolunteers([]);
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unable to load volunteer roster right now.';
       setErrorMessage(message);

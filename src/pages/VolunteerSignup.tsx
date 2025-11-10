@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle2, Loader2, ArrowLeft } from 'lucide-react';
 import { activeVolunteerRoles } from '../data/volunteerRoles';
@@ -19,6 +19,10 @@ const defaultFormState: FormState = {
 };
 
 const VolunteerSignup = () => {
+  useEffect(() => {
+    document.title = 'BGR Discovery 5k - Sign Up to Volunteer';
+  }, []);
+
   const [formState, setFormState] = useState<FormState>(defaultFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -52,16 +56,17 @@ const VolunteerSignup = () => {
     setErrorMessage(null);
 
     try {
-      const response = await fetch(buildApiUrl('/api/volunteer/input'), {
+      const response = await fetch(buildApiUrl('/api/event-volunteer'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          eventSlug: 'boys-gotta-run-2025',
           name: name.trim(),
           email: email.trim(),
           role: roleId,
-          note: note.trim() ? note.trim() : undefined,
+          notes: note.trim() ? note.trim() : undefined,
         }),
       });
 
@@ -70,8 +75,13 @@ const VolunteerSignup = () => {
         const message =
           typeof payload?.error === 'string'
             ? payload.error
-            : 'Something went wrong while saving your signup. Please try again.';
+            : payload?.message || 'Something went wrong while saving your signup. Please try again.';
         throw new Error(message);
+      }
+
+      const payload = await response.json();
+      if (!payload.success) {
+        throw new Error(payload.error || 'Failed to submit signup');
       }
 
       resetForm();

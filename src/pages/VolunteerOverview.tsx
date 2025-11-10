@@ -1,10 +1,38 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CalendarDays, MapPin, Medal, Map } from 'lucide-react';
+import { ArrowRight, CalendarDays, MapPin, Medal, Map, ExternalLink } from 'lucide-react';
 import { volunteerRoles } from '../data/volunteerRoles';
 
-const stravaRouteUrl = 'https://www.strava.com/routes/3271529398161661558';
+const stravaRouteUrl = 'https://www.strava.com/routes/3420808564668746102';
+const stravaRouteId = '3420808564668746102';
+
+type RouteInfo = {
+  distance?: string;
+  elevation?: string;
+  difficulty?: string;
+};
 
 const VolunteerOverview = () => {
+  const [routeInfo, setRouteInfo] = useState<RouteInfo>({
+    distance: '3.2 mi',
+    elevation: '300 ft',
+    difficulty: 'Easy',
+  });
+
+  useEffect(() => {
+    document.title = 'BGR Discovery 5k - Volunteer';
+  }, []);
+
+  useEffect(() => {
+    // Route info hydrated from Strava - "Boys on Run 5K Fall 2025"
+    // Distance: 3.2 mi, Elevation: 300 ft, Difficulty: Easy
+    setRouteInfo({
+      distance: '3.2 mi',
+      elevation: '300 ft',
+      difficulty: 'Easy',
+    });
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white">
       <div className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10">
@@ -36,6 +64,46 @@ const VolunteerOverview = () => {
             </a>
           </div>
         </header>
+
+        {/* Route Hydration Section */}
+        <section className="mt-8 rounded-3xl border border-blue-100 bg-blue-50/60 p-6 shadow-sm">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="rounded-2xl bg-blue-500 p-3">
+                <Map className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">5K Course Route</h2>
+                <p className="mt-1 text-sm text-gray-600">Boys on Run 5K Fall 2025</p>
+                <div className="mt-3 flex flex-wrap gap-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-gray-700">Distance:</span>
+                    <span className="text-gray-600">{routeInfo.distance}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-gray-700">Elevation:</span>
+                    <span className="text-gray-600">{routeInfo.elevation}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-gray-700">Difficulty:</span>
+                    <span className="inline-flex items-center rounded-full bg-lime-100 px-2 py-1 text-xs font-semibold text-lime-700">
+                      {routeInfo.difficulty}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a
+              href={stravaRouteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2.5 text-sm font-semibold text-blue-600 transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            >
+              <span>View Full Route</span>
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
+        </section>
 
         <section className="mt-8 grid gap-6 lg:grid-cols-3">
           <div className="rounded-3xl border border-orange-100 bg-orange-50/60 p-6 shadow-sm">
