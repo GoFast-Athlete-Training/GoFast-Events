@@ -19,8 +19,8 @@ export const volunteerRoles: VolunteerRole[] = [
   {
     id: 'course-marshals',
     name: 'Course Marshals',
-    description: 'Cheer and guide runners at assigned corners so nobody takes a wrong turn. Positions are grouped from 13 route points along the 5K course.',
-    slotCount: 5, // TODO: Update based on user's grouping preferences
+    description: 'Cheer and guide runners at assigned corners so nobody takes a wrong turn. 7 volunteer groups cover 13 route points with repositioning.',
+    slotCount: 7,
     isActive: true,
   },
   {
@@ -67,6 +67,17 @@ export const volunteerRoles: VolunteerRole[] = [
   },
 ];
 
+// Specific marshal position names (matching RouteOverview)
+const marshalPositionNames = [
+  'Starter + Finisher Crew',
+  'Valleywood + John Marshall Crew',
+  'Vermont + 35th Street North Crew',
+  'Massachusetts + Nottingham / 35th Crew',
+  'Massachusetts / Rhode Island + Rockingham Crew',
+  'Virginia Avenue Entry Crew',
+  'Virginia / Nottingham Crew',
+];
+
 /**
  * Generate individual slots from role definitions
  * This creates SignUpGenius-style individual slots for each role
@@ -76,17 +87,34 @@ export const generateVolunteerSlots = (): VolunteerSlot[] => {
 
   volunteerRoles.forEach((role) => {
     if (role.isActive) {
-      for (let i = 1; i <= role.slotCount; i++) {
-        const slotId = role.slotCount > 1 ? `${role.id}-${i}` : role.id;
-        const slotName = role.slotCount > 1 ? `${role.name} ${i}` : role.name;
+      // Special handling for course marshals - use specific position names
+      if (role.id === 'course-marshals') {
+        for (let i = 0; i < role.slotCount; i++) {
+          const slotId = `course-marshal-${i + 1}`;
+          const slotName = marshalPositionNames[i] || `Course Marshal ${i + 1}`;
 
-        slots.push({
-          id: slotId,
-          roleId: role.id,
-          roleName: slotName, // This is what gets sent to backend
-          description: role.description,
-          isActive: true,
-        });
+          slots.push({
+            id: slotId,
+            roleId: role.id,
+            roleName: slotName, // Use specific position names
+            description: role.description,
+            isActive: true,
+          });
+        }
+      } else {
+        // For other roles, use standard numbering
+        for (let i = 1; i <= role.slotCount; i++) {
+          const slotId = role.slotCount > 1 ? `${role.id}-${i}` : role.id;
+          const slotName = role.slotCount > 1 ? `${role.name} ${i}` : role.name;
+
+          slots.push({
+            id: slotId,
+            roleId: role.id,
+            roleName: slotName,
+            description: role.description,
+            isActive: true,
+          });
+        }
       }
     }
   });

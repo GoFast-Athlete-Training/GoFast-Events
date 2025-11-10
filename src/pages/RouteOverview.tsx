@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Navigation, MapPin, ArrowRight, Users, Droplet, Flag, Route } from 'lucide-react';
+import { Navigation, MapPin, ArrowRight, Users, Droplet, Flag, Route, Repeat } from 'lucide-react';
 import { BGR5K_CONFIG } from '../config/bgr5kConfig';
 
 /**
  * RouteOverview - Detailed view for Course Marshals
- * Shows route points and volunteer marshal positions
+ * Shows route points and volunteer marshal positions with repositioning logic
  */
 const RouteOverview = () => {
   useEffect(() => {
@@ -94,20 +94,77 @@ const RouteOverview = () => {
     },
   ];
 
-  // Volunteer Marshal Positions (to be grouped by user)
-  // Each volunteer position can cover one or more route points
-  // TODO: User will provide groupings - placeholder structure for now
+  // Volunteer Marshal Positions (7 groups with repositioning logic)
   const volunteerPositions = [
     {
       id: 'volunteer-1',
-      name: 'Marshal Position 1',
-      routePoints: ['route-1', 'route-2'], // Which route points this volunteer covers
-      description: 'Covers the start and first section of the course.',
+      name: 'Starter + Finisher Crew',
+      routePoints: ['route-1', 'route-13'],
+      description: 'Handles the first right turn at the start, then repositions to guide runners on the final straight to the finish line.',
+      repositioning: 'After the pack clears the first turn (0.22 mi), returns to Discovery to guide the final straight (2.7–3.2 mi).',
       needsGatorade: false,
-      notes: 'TODO: User will specify which route points this position covers',
+      importance: 'Start & Finish - High visibility',
     },
-    // More positions will be added based on user's groupings
+    {
+      id: 'volunteer-2',
+      name: 'Valleywood + John Marshall Crew',
+      routePoints: ['route-2', 'route-12'],
+      description: 'Covers the early Valleywood stretch, then repositions to guide runners on the final turn before the finish.',
+      repositioning: 'Starts on Valleywood (0.3–0.7 mi); after last runner, loops back via Valleywood to cover John Marshall right (2.5 mi).',
+      needsGatorade: false,
+      importance: 'Early course + Final turn',
+    },
+    {
+      id: 'volunteer-3',
+      name: 'Vermont + 35th Street North Crew',
+      routePoints: ['route-3', 'route-11'],
+      description: 'Guides runners at the Vermont turn, then repositions to cover the 35th Street turn in the final stretch.',
+      repositioning: 'Parks near Vermont (0.75 mi); when clear, re-posts at 35th left (2.4 mi).',
+      needsGatorade: false,
+      importance: 'Mid-course + Finish approach',
+    },
+    {
+      id: 'volunteer-4',
+      name: 'Massachusetts + Nottingham / 35th Crew',
+      routePoints: ['route-4', 'route-10'],
+      description: 'Covers the important Massachusetts turn (watch for traffic), then repositions to the Nottingham/35th turn.',
+      repositioning: 'Covers left onto Mass (0.82 mi); after cleared, repositions via Rockingham to Nottingham/35th (2.3 mi).',
+      needsGatorade: false,
+      importance: 'Safety position + Finish sequence',
+    },
+    {
+      id: 'volunteer-5',
+      name: 'Massachusetts / Rhode Island + Rockingham Crew',
+      routePoints: ['route-5', 'route-9'],
+      description: 'Stations at the Rhode Island turn (ideal for Gatorade station), then repositions to cover the Rockingham interchange.',
+      repositioning: 'Stations at right onto Rhode Island (1.09 mi); then repositions via Rockingham to cover Nottingham interchange (2.1 mi).',
+      needsGatorade: true,
+      importance: 'Mid-course hydration + Final section',
+    },
+    {
+      id: 'volunteer-6',
+      name: 'Virginia Avenue Entry Crew',
+      routePoints: ['route-6', 'route-7'],
+      description: 'Covers the Virginia Avenue entry and stays in place along the early Virginia segment.',
+      repositioning: 'One person stationed at the Rhode Island to Virginia left (≈ 1.17 mi); remains there along early Virginia segment.',
+      needsGatorade: false,
+      importance: 'Mid-course - Stays in place',
+    },
+    {
+      id: 'volunteer-7',
+      name: 'Virginia / Nottingham Crew',
+      routePoints: ['route-8'],
+      description: 'Single post at the right turn onto Nottingham, marking the beginning of the final neighborhood stretch.',
+      repositioning: 'Single post at right turn onto Nottingham (≈ 2.0 mi).',
+      needsGatorade: false,
+      importance: 'Final section start',
+    },
   ];
+
+  // Helper to get route point details
+  const getRoutePointDetails = (routePointId: string) => {
+    return routePoints.find((p) => p.id === routePointId);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white">
@@ -120,13 +177,12 @@ const RouteOverview = () => {
           </h1>
           <p className="mt-4 max-w-2xl text-base text-gray-600">
             Course marshals are essential for guiding our young athletes and keeping them on the right path. 
-            You'll be positioned at key points along the course to provide direction, encouragement, and support.
+            We need <strong>7 volunteer groups</strong> to cover all 13 route points along the 5K course.
           </p>
           <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
             <p className="text-sm text-blue-800">
-              <strong>Note:</strong> The course has <strong>13 route points</strong> (turns and key locations). 
-              Volunteers will be grouped into positions that cover one or more route points. 
-              See the route points reference below, then the volunteer positions you can sign up for.
+              <strong>Note:</strong> Most marshal positions involve <strong>repositioning</strong> to cover multiple route points. 
+              You'll start at an early position, then move to a later position once the pack clears. This maximizes coverage with fewer volunteers!
             </p>
           </div>
         </header>
@@ -142,6 +198,10 @@ const RouteOverview = () => {
             <li className="flex items-start gap-3">
               <span className="text-orange-500 mt-1">•</span>
               <span><strong>Provide Encouragement:</strong> Cheer on runners as they pass your position</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-orange-500 mt-1">•</span>
+              <span><strong>Reposition:</strong> Most positions move to a second location after the pack clears</span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-orange-500 mt-1">•</span>
@@ -163,7 +223,7 @@ const RouteOverview = () => {
             </div>
             <p className="text-sm text-gray-600">
               The 5K course has <strong>13 route points</strong> (turns and key locations). 
-              These are shown below for reference. Volunteer positions will be grouped to cover these points.
+              Volunteer positions are grouped to cover these points efficiently with repositioning.
             </p>
           </div>
 
@@ -207,7 +267,7 @@ const RouteOverview = () => {
           </div>
         </section>
 
-        {/* Volunteer Positions (Grouped) */}
+        {/* Volunteer Positions */}
         <section className="mt-8 rounded-3xl border border-orange-100 bg-orange-50/30 p-8 shadow-sm">
           <div className="mb-6">
             <div className="flex items-center gap-3 mb-2">
@@ -215,79 +275,133 @@ const RouteOverview = () => {
               <h2 className="text-2xl font-semibold text-gray-900">Volunteer Marshal Positions</h2>
             </div>
             <p className="text-sm text-gray-600">
-              <strong>Volunteer positions will be grouped from the route points above.</strong> 
-              Each volunteer position covers one or more route points. 
-              Sign up for a position below to help cover the course.
+              <strong>7 volunteer groups needed.</strong> Each group covers specific route points, with most involving repositioning to maximize coverage.
             </p>
-            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
-              <p className="text-sm text-yellow-800">
-                ⚠️ <strong>Position groupings pending:</strong> Volunteer positions will be configured based on how you want to group the 13 route points. 
-                Once configured, each position will show which route points it covers.
-              </p>
-            </div>
           </div>
 
-          {/* Placeholder for volunteer positions */}
-          <div className="space-y-4">
-            {volunteerPositions.length > 0 ? (
-              volunteerPositions.map((position) => {
-                const coveredPoints = routePoints.filter((p) => position.routePoints.includes(p.id));
-                return (
-                  <div
-                    key={position.id}
-                    className="rounded-2xl border-2 border-orange-200 bg-white p-6 hover:border-orange-300 hover:shadow-md transition"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="rounded-xl bg-orange-500 p-2">
-                            <Navigation className="h-5 w-5 text-white" />
-                          </div>
-                          <h3 className="text-lg font-semibold text-gray-900">{position.name}</h3>
-                          {position.needsGatorade && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
-                              <Droplet className="h-3 w-3" />
-                              <span>Gatorade</span>
-                            </span>
-                          )}
+          <div className="space-y-6">
+            {volunteerPositions.map((position, index) => {
+              const coveredPoints = position.routePoints
+                .map((id) => getRoutePointDetails(id))
+                .filter((p) => p !== undefined);
+
+              return (
+                <div
+                  key={position.id}
+                  className={`rounded-2xl border-2 p-6 transition ${
+                    position.needsGatorade
+                      ? 'border-blue-200 bg-blue-50/50 hover:border-blue-300 hover:shadow-md'
+                      : position.importance.includes('Finish') || position.importance.includes('High visibility')
+                      ? 'border-orange-200 bg-orange-50/40 hover:border-orange-300 hover:shadow-md'
+                      : 'border-gray-200 bg-white hover:border-orange-200 hover:shadow-md'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className={`rounded-xl p-3 ${
+                          position.importance.includes('Finish') || position.importance.includes('High visibility')
+                            ? 'bg-orange-500'
+                            : position.needsGatorade
+                            ? 'bg-blue-500'
+                            : 'bg-gray-500'
+                        }`}>
+                          <span className="text-white font-bold text-lg">{index + 1}</span>
                         </div>
-                        <p className="text-sm text-gray-600 mb-4">{position.description}</p>
-                        {coveredPoints.length > 0 && (
-                          <div className="mt-4 pt-4 border-t border-gray-200">
-                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                              Covers Route Points:
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {coveredPoints.map((point, idx) => (
-                                <span
-                                  key={point.id}
-                                  className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700"
-                                >
-                                  #{routePoints.indexOf(point) + 1} {point.location.split('→')[0].trim()}
-                                </span>
-                              ))}
-                            </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 flex-wrap">
+                            <h3 className="text-xl font-semibold text-gray-900">{position.name}</h3>
+                            {position.needsGatorade && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                                <Droplet className="h-3 w-3" />
+                                <span>Gatorade Station</span>
+                              </span>
+                            )}
+                            {position.importance.includes('Safety') && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700">
+                                <span>⚠️ Safety</span>
+                              </span>
+                            )}
                           </div>
-                        )}
-                        {position.notes && (
-                          <p className="mt-3 text-xs text-gray-500 italic">{position.notes}</p>
-                        )}
+                          <p className="text-sm text-gray-500 mt-1">{position.importance}</p>
+                        </div>
+                      </div>
+
+                      <p className="text-sm text-gray-700 mb-4">{position.description}</p>
+
+                      {/* Repositioning Info */}
+                      <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="flex items-start gap-2">
+                          <Repeat className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">
+                              Repositioning Plan
+                            </p>
+                            <p className="text-sm text-gray-700">{position.repositioning}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Covered Route Points */}
+                      {coveredPoints.length > 0 && (
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                          <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">
+                            Covers Route Points:
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {coveredPoints.map((point) => {
+                              const routeIndex = routePoints.findIndex((p) => p.id === point!.id);
+                              return (
+                                <div
+                                  key={point!.id}
+                                  className="inline-flex items-center gap-2 rounded-lg bg-gray-100 border border-gray-200 px-3 py-2"
+                                >
+                                  <span className="text-xs font-bold text-gray-700">#{routeIndex + 1}</span>
+                                  <span className="text-xs font-medium text-gray-700">{point!.location.split('→')[0].trim()}</span>
+                                  <span className="text-xs text-gray-500">({point!.mile} mi)</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* CTA Button */}
+                      <div className="mt-6">
+                        <Link
+                          to="/volunteer/signup"
+                          className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
+                        >
+                          <Users className="h-4 w-4" />
+                          <span>Take This Role</span>
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
                       </div>
                     </div>
                   </div>
-                );
-              })
-            ) : (
-              <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 p-8 text-center">
-                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-sm font-medium text-gray-600 mb-2">
-                  Volunteer positions will be configured here
-                </p>
-                <p className="text-xs text-gray-500">
-                  Once you provide the groupings, volunteer positions will appear here with which route points they cover.
-                </p>
-              </div>
-            )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Key Information */}
+        <section className="mt-8 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-2xl border border-blue-200 bg-blue-50/60 p-4">
+            <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+              <Droplet className="h-4 w-4 text-blue-600" />
+              Gatorade Station
+            </h3>
+            <p className="text-sm text-gray-600">Position 5: Massachusetts / Rhode Island + Rockingham Crew</p>
+            <p className="text-xs text-gray-500 mt-1">Ideal location at mile 1.09 for mid-course hydration</p>
+          </div>
+          <div className="rounded-2xl border border-red-200 bg-red-50/60 p-4">
+            <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+              <span>⚠️</span>
+              Safety Position
+            </h3>
+            <p className="text-sm text-gray-600">Position 4: Massachusetts + Nottingham / 35th Crew</p>
+            <p className="text-xs text-gray-500 mt-1">Watch for traffic at Vermont → Massachusetts turn</p>
           </div>
         </section>
 
@@ -300,7 +414,7 @@ const RouteOverview = () => {
             <div className="flex-1">
               <h2 className="text-xl font-semibold text-gray-900">Bring Gatorade?</h2>
               <p className="mt-2 text-sm text-gray-600">
-                Some marshal positions are ideal for water/Gatorade stations (e.g., around mile 1.09 at the mid-course point). 
+                <strong>Position 5 (Massachusetts / Rhode Island + Rockingham Crew)</strong> is an ideal location for a mid-course water/Gatorade station at mile 1.09. 
                 If you're able to bring Gatorade or other sports drinks for the runners, please note it in your signup!
               </p>
             </div>
@@ -311,7 +425,8 @@ const RouteOverview = () => {
         <section className="mt-8 rounded-3xl border border-dashed border-orange-200 bg-orange-50/50 p-8 text-center shadow-sm">
           <h3 className="text-xl font-semibold text-gray-900">Ready to Help as a Marshal?</h3>
           <p className="mt-3 text-sm text-gray-600">
-            Once volunteer positions are configured, you'll be able to sign up for a specific position that covers one or more route points.
+            Choose a position above and click "Take This Role" to sign up. Every position helps our young athletes succeed! 
+            We need all 7 positions filled to ensure a safe and supportive race experience.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-4">
             <Link
@@ -319,7 +434,7 @@ const RouteOverview = () => {
               className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
             >
               <Users className="h-4 w-4" />
-              <span>Sign Up as a Marshal</span>
+              <span>View All Volunteer Roles</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
