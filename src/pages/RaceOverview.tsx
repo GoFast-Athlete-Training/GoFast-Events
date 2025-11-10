@@ -183,19 +183,23 @@ const RaceOverview = () => {
           </Link>
 
           {/* Final Preps */}
-          <div className="rounded-3xl border-2 border-dashed border-gray-300 bg-gray-50 p-6">
+          <Link
+            to="/final-preps"
+            className="group rounded-3xl border-2 border-lime-200 bg-white p-6 shadow-sm transition hover:border-lime-400 hover:shadow-md"
+          >
             <div className="flex items-center gap-4">
-              <div className="rounded-2xl bg-gray-400 p-3">
+              <div className="rounded-2xl bg-lime-500 p-3 group-hover:bg-lime-600 transition">
                 <Medal className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-700">Final Preps</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Coming soon - race day checklist
+                <h3 className="text-lg font-semibold text-gray-900">Final Preps</h3>
+                <p className="mt-1 text-sm text-gray-600">
+                  Race day checklist and tips
                 </p>
               </div>
+              <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-lime-600 transition" />
             </div>
-          </div>
+          </Link>
         </section>
       </div>
     </div>

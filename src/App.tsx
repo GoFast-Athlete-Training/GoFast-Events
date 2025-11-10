@@ -8,6 +8,7 @@ import RouteOverview from './pages/RouteOverview';
 import PacerOverview from './pages/PacerOverview';
 import FinishCheererOverview from './pages/FinishCheererOverview';
 import WaterStationOverview from './pages/WaterStationOverview';
+import FinalPreps from './pages/FinalPreps';
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/volunteer/water-station" element={<WaterStationOverview />} />
         <Route path="/volunteer/signup" element={<VolunteerSignup />} />
         <Route path="/volunteer/roster" element={<VolunteerRoster />} />
+        <Route path="/final-preps" element={<FinalPreps />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
