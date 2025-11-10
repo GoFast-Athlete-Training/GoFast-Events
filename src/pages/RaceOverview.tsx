@@ -15,14 +15,23 @@ const RaceOverview = () => {
       <div className="mx-auto max-w-6xl px-6 py-12 sm:px-8 lg:px-10">
         {/* Hero Section */}
         <header className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-gray-100">
-          <p className="text-xs uppercase tracking-[0.3em] text-orange-500">Final Run</p>
-          <h1 className="mt-4 text-3xl font-bold text-gray-900 sm:text-4xl">
-            🏃‍♂️ Boys Gotta Run – Discovery 5K
-          </h1>
-          <p className="mt-4 max-w-2xl text-base text-gray-600">
-            It's the final week of our Boys Gotta Run season. We're keeping it low-key, warm, and all about the kids.
-            Join us for a celebratory 5K run that honors the journey and celebrates every finish.
-          </p>
+          <div className="flex items-start gap-6 flex-col sm:flex-row">
+            <img 
+              src="/BGR_logo.avif" 
+              alt="Boys Gotta Run Logo" 
+              className="w-24 h-24 rounded-2xl shadow-md object-cover flex-shrink-0"
+            />
+            <div className="flex-1">
+              <p className="text-xs uppercase tracking-[0.3em] text-orange-500">Final Run</p>
+              <h1 className="mt-4 text-3xl font-bold text-gray-900 sm:text-4xl">
+                🏃‍♂️ Boys Gotta Run – Discovery 5K
+              </h1>
+              <p className="mt-4 max-w-2xl text-base text-gray-600">
+                It's the final week of our Boys Gotta Run season. We're keeping it low-key, warm, and all about the kids.
+                Join us for a celebratory 5K run that honors the journey and celebrates every finish.
+              </p>
+            </div>
+          </div>
         </header>
 
         {/* Strava Route Map - Static image with interactive option */}
@@ -184,23 +193,6 @@ const RaceOverview = () => {
                 </p>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="mt-10 rounded-3xl border border-dashed border-orange-200 bg-orange-50/50 p-8 text-center shadow-sm">
-          <h3 className="text-xl font-semibold text-gray-900">Volunteers Make This Run Special</h3>
-          <p className="mt-3 text-sm text-gray-600">
-            We need volunteers to help guide, cheer, and celebrate our runners. Every role matters, and every volunteer makes a difference.
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-4">
-            <Link
-              to="/volunteer"
-              className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
-            >
-              <span>View Volunteer Opportunities</span>
-              <ArrowRight className="h-4 w-4" />
-            </Link>
           </div>
         </section>
       </div>
