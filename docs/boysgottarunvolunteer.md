@@ -29,6 +29,13 @@ This is a **unique, event-specific volunteer system** for the Boys Gotta Run Dis
 - `eventId` is stored in `src/config/eventConfig.ts`
 - Set when event is created in main backend (EventManagement)
 - Hardcoded for this specific event instance
+- Falls back to localStorage if config is empty (for dynamic setting)
+
+### Distance Configuration
+- Standard distances defined in `src/config/eventDistanceConfig.ts`
+- Distances: 5K, 10K, 5 mile, 10 mile, Half Marathon, Marathon
+- For now, stored as string in backend (e.g., "5K")
+- Future: Can use distance IDs with validation
 
 ---
 
@@ -36,7 +43,7 @@ This is a **unique, event-specific volunteer system** for the Boys Gotta Run Dis
 
 ### Frontend Role IDs → Backend Role Strings
 
-The `VolunteerRoleMapperService` maps frontend role IDs to backend role strings:
+The `UniversalEventMapperService` maps frontend role IDs to backend role strings:
 
 | Frontend ID | Frontend Name | Backend Role String |
 |------------|---------------|---------------------|
@@ -49,6 +56,8 @@ The `VolunteerRoleMapperService` maps frontend role IDs to backend role strings:
 | `setup-teardown` | Setup & Teardown | `Setup & Teardown` |
 
 **Note**: Backend receives the **role name string** (e.g., "Course Marshals (5)"), not the ID.
+
+**Service**: `UniversalEventMapperService.mapRoleIdToRoleName()` handles the mapping.
 
 ---
 
