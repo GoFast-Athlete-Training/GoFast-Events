@@ -9,7 +9,7 @@ import InlineSignupRow from '../components/InlineSignupRow';
 type VolunteerEntry = {
   id: string;
   name: string;
-  email: string;
+  // email is NOT included in public page-hydrate endpoint for privacy
   role: string;
   note?: string | null;
   createdAt: string;
@@ -33,7 +33,8 @@ const PacerOverview = () => {
       const eventId = getBGR5KEventId();
       if (!eventId) return;
 
-      const response = await fetch(buildApiUrl(`/api/event-volunteer?eventId=${eventId}`));
+      // Use page-hydrate endpoint (public - no emails for privacy)
+      const response = await fetch(buildApiUrl(`/api/event-volunteer/page-hydrate?eventId=${eventId}`));
       if (!response.ok) return;
 
       const payload = (await response.json()) as { success?: boolean; data?: VolunteerEntry[] };

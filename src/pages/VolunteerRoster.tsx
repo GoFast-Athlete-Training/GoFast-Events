@@ -8,7 +8,7 @@ import { getBGR5KEventId } from '../config/bgr5kConfig';
 type VolunteerEntry = {
   id: string;
   name: string;
-  email: string;
+  // email is NOT included in public page-hydrate endpoint for privacy
   role: string;
   note?: string | null;
   createdAt: string;
@@ -53,7 +53,8 @@ const VolunteerRoster = () => {
         throw new Error('Event ID not configured. Please set eventId in bgr5kConfig.js');
       }
 
-      const response = await fetch(buildApiUrl(`/api/event-volunteer?eventId=${eventId}`));
+      // Use page-hydrate endpoint (public - no emails for privacy)
+      const response = await fetch(buildApiUrl(`/api/event-volunteer/page-hydrate?eventId=${eventId}`));
       if (!response.ok) {
         const payload = await response.json().catch(() => null);
         const message =
@@ -138,9 +139,6 @@ const VolunteerRoster = () => {
                     <th scope="col" className="px-4 py-3 text-left font-semibold text-gray-600">
                       Name
                     </th>
-                    <th scope="col" className="hidden px-4 py-3 text-left font-semibold text-gray-600 md:table-cell">
-                      Email
-                    </th>
                     <th scope="col" className="px-4 py-3 text-left font-semibold text-gray-600">
                       Role
                     </th>
@@ -155,7 +153,7 @@ const VolunteerRoster = () => {
                 <tbody className="divide-y divide-gray-100 bg-white">
                   {isLoading ? (
                     <tr>
-                      <td colSpan={5} className="px-4 py-10 text-center text-sm text-gray-500">
+                      <td colSpan={4} className="px-4 py-10 text-center text-sm text-gray-500">
                         <span className="inline-flex items-center gap-2 text-gray-500">
                           <Loader2 className="h-4 w-4 animate-spin" />
                           Loading roster…
@@ -164,7 +162,7 @@ const VolunteerRoster = () => {
                     </tr>
                   ) : volunteers.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="px-4 py-10 text-center text-sm text-gray-500">
+                      <td colSpan={4} className="px-4 py-10 text-center text-sm text-gray-500">
                         No volunteers yet. Share the signup link to fill the roles.
                       </td>
                     </tr>
@@ -172,7 +170,6 @@ const VolunteerRoster = () => {
                     volunteers.map((volunteer) => (
                       <tr key={volunteer.id} className="transition hover:bg-orange-50/40">
                         <td className="px-4 py-4 font-medium text-gray-900">{volunteer.name}</td>
-                        <td className="hidden px-4 py-4 text-gray-600 md:table-cell">{volunteer.email}</td>
                         <td className="px-4 py-4 text-gray-700">
                                 {volunteer.role}
                         </td>

@@ -7,7 +7,7 @@ import { getBGR5KEventId } from '../config/bgr5kConfig';
 type VolunteerEntry = {
   id: string;
   name: string;
-  email: string;
+  email?: string; // Optional - not included in public page-hydrate endpoint for privacy
   role: string;
   note?: string | null;
   createdAt: string;
@@ -114,7 +114,9 @@ const InlineSignupRow = ({
           <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-green-900">{volunteer.name}</p>
-            <p className="text-xs text-green-700">{volunteer.email}</p>
+            {volunteer.email && (
+              <p className="text-xs text-green-700">{volunteer.email}</p>
+            )}
           </div>
         </div>
       ) : (
