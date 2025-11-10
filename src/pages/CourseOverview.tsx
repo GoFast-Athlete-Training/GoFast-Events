@@ -141,25 +141,6 @@ const CourseOverview = () => {
             </div>
           </section>
 
-          {/* Route Information - Simplified */}
-          <section className="mt-6 rounded-xl border border-blue-100 bg-blue-50/60 p-4 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-blue-500 p-2">
-                <Map className="h-4 w-4 text-white" />
-              </div>
-              <div>
-                <h2 className="text-sm font-semibold text-gray-900">5K Course Route</h2>
-                <div className="mt-1 flex flex-wrap gap-3 text-xs">
-                  <span className="text-gray-600">Distance: {BGR5K_CONFIG.distance}</span>
-                  <span className="text-gray-600">Elevation: {BGR5K_CONFIG.elevation}</span>
-                  <span className="inline-flex items-center rounded-full bg-lime-100 px-2 py-0.5 text-xs font-semibold text-lime-700">
-                    {BGR5K_CONFIG.difficulty}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </section>
-
           {/* Specific Turn Outlook */}
           <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
             <div className="mb-6">
