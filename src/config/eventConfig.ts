@@ -5,7 +5,7 @@
  * For Boys Gotta Run – Discovery 5K, see bgr5kConfig.js
  */
 
-import { BGR5K_CONFIG, getBGR5KEventId } from './bgr5kConfig.js';
+import { BGR5K_CONFIG, getBGR5KEventId } from './bgr5kConfig';
 
 // Export BGR5K config as EVENT_CONFIG for backward compatibility
 export const EVENT_CONFIG = BGR5K_CONFIG;

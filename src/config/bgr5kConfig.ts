@@ -21,12 +21,12 @@ export const BGR5K_CONFIG = {
   distance: '3.2 mi',
   elevation: '300 ft',
   difficulty: 'Easy',
-};
+} as const;
 
 /**
  * Get eventId from BGR5K config
  */
-export const getBGR5KEventId = () => {
+export const getBGR5KEventId = (): string => {
   return BGR5K_CONFIG.eventId;
 };
 

@@ -1,209 +1,207 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CalendarDays, MapPin, Medal, Map, ExternalLink } from 'lucide-react';
-import { volunteerRoles } from '../data/volunteerRoles';
-import { BGR5K_CONFIG } from '../config/bgr5kConfig.js';
+import { ArrowRight, Users, CheckCircle2, XCircle } from 'lucide-react';
+import { activeVolunteerRoles, activeVolunteerSlots } from '../data/volunteerRoles';
+import { buildApiUrl } from '../lib/api';
+import { getBGR5KEventId } from '../config/bgr5kConfig.js';
 
-type RouteInfo = {
-  distance?: string;
-  elevation?: string;
-  difficulty?: string;
+type VolunteerEntry = {
+  id: string;
+  name: string;
+  role: string;
 };
 
 const VolunteerOverview = () => {
-  const [routeInfo, setRouteInfo] = useState<RouteInfo>({
-    distance: '3.2 mi',
-    elevation: '300 ft',
-    difficulty: 'Easy',
-  });
+  const [volunteers, setVolunteers] = useState<VolunteerEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    document.title = 'BGR Discovery 5k - Volunteer';
+    document.title = 'BGR Discovery 5k - Volunteer Opportunities';
   }, []);
 
   useEffect(() => {
-    // Route info hydrated from Strava - "Boys on Run 5K Fall 2025"
-    // Distance: 3.2 mi, Elevation: 300 ft, Difficulty: Easy
-    setRouteInfo({
-      distance: '3.2 mi',
-      elevation: '300 ft',
-      difficulty: 'Easy',
+    fetchVolunteers();
+  }, []);
+
+  const fetchVolunteers = async () => {
+    setIsLoading(true);
+    try {
+      const eventId = getBGR5KEventId();
+      if (!eventId) {
+        console.error('Event ID not configured');
+        return;
+      }
+
+      const response = await fetch(buildApiUrl(`/api/event-volunteer?eventId=${eventId}`));
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.data) {
+          setVolunteers(data.data);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching volunteers:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Group volunteers by role to show availability
+  const getSlotAvailability = () => {
+    const availability: Record<string, { filled: number; total: number; volunteers: VolunteerEntry[] }> = {};
+
+    // Initialize all slots
+    activeVolunteerSlots.forEach((slot) => {
+      availability[slot.id] = {
+        filled: 0,
+        total: 1,
+        volunteers: [],
+      };
     });
-  }, []);
+
+    // Count filled slots
+    volunteers.forEach((volunteer) => {
+      // Find which slot this volunteer filled
+      const slot = activeVolunteerSlots.find((s) => s.roleName === volunteer.role);
+      if (slot && availability[slot.id]) {
+        availability[slot.id].filled++;
+        availability[slot.id].volunteers.push(volunteer);
+      }
+    });
+
+    return availability;
+  };
+
+  // Group slots by role for display
+  const getRolesWithSlots = () => {
+    const rolesWithSlots = activeVolunteerRoles.map((role) => {
+      const roleSlots = activeVolunteerSlots.filter((slot) => slot.roleId === role.id);
+      return {
+        role,
+        slots: roleSlots,
+      };
+    });
+
+    return rolesWithSlots;
+  };
+
+  const slotAvailability = getSlotAvailability();
+  const rolesWithSlots = getRolesWithSlots();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white">
       <div className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10">
         <header className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-gray-100">
-          <p className="text-xs uppercase tracking-[0.3em] text-orange-500">Volunteer Crew</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-orange-500">Volunteer Opportunities</p>
           <h1 className="mt-4 text-3xl font-bold text-gray-900 sm:text-4xl">
-            🏃‍♂️ Boys Gotta Run – Discovery 5K (Final Run)
+            Help Make the Discovery 5K Special
           </h1>
           <p className="mt-4 max-w-2xl text-base text-gray-600">
-            It’s the final week of our Boys Gotta Run season. We’re keeping it low-key, warm, and all about the kids.
-            Thank you for helping us send them off with cheers, high-fives, and a finish they’ll remember.
+            We need your help to make this final run memorable. Every role matters, and every volunteer makes a difference.
+            Choose a role that fits your style and sign up below.
           </p>
           <div className="mt-6 flex flex-wrap gap-4">
             <Link
               to="/volunteer/signup"
               className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
             >
-              <span>Sign Up to Help</span>
+              <span>Sign Up to Volunteer</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
-            {BGR5K_CONFIG.stravaRouteUrl && (
-              <a
-                href={BGR5K_CONFIG.stravaRouteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-offset-2"
-              >
-                <Map className="h-4 w-4" />
-                <span>View 5K Course Map</span>
-              </a>
-            )}
+            <Link
+              to="/volunteer/roster"
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-offset-2"
+            >
+              <Users className="h-4 w-4" />
+              <span>View Roster</span>
+            </Link>
           </div>
         </header>
 
-        {/* Route Hydration Section */}
-        <section className="mt-8 rounded-3xl border border-blue-100 bg-blue-50/60 p-6 shadow-sm">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-start gap-4">
-              <div className="rounded-2xl bg-blue-500 p-3">
-                <Map className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900">5K Course Route</h2>
-                <p className="mt-1 text-sm text-gray-600">Boys on Run 5K Fall 2025</p>
-                <div className="mt-3 flex flex-wrap gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-700">Distance:</span>
-                    <span className="text-gray-600">{routeInfo.distance}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-700">Elevation:</span>
-                    <span className="text-gray-600">{routeInfo.elevation}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-700">Difficulty:</span>
-                    <span className="inline-flex items-center rounded-full bg-lime-100 px-2 py-1 text-xs font-semibold text-lime-700">
-                      {routeInfo.difficulty}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {BGR5K_CONFIG.stravaRouteUrl && (
-              <a
-                href={BGR5K_CONFIG.stravaRouteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2.5 text-sm font-semibold text-blue-600 transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200"
-              >
-                <span>View Full Route</span>
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            )}
-          </div>
-        </section>
-
-        <section className="mt-8 grid gap-6 lg:grid-cols-3">
-          <div className="rounded-3xl border border-orange-100 bg-orange-50/60 p-6 shadow-sm">
-            <CalendarDays className="h-6 w-6 text-orange-500" />
-            <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-orange-600">Date & Time</p>
-            <p className="mt-2 text-2xl font-bold text-gray-900">Wednesday, November 12, 2025 – 7:55 AM</p>
-            <p className="mt-3 text-sm text-gray-600">
-              Meet at our normal spot, do a 10-minute warm-up, then start the 5K course together.
-            </p>
-          </div>
-          <div className="rounded-3xl border border-sky-100 bg-sky-50/60 p-6 shadow-sm">
-            <MapPin className="h-6 w-6 text-sky-500" />
-            <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-sky-600">Location</p>
-            <p className="mt-2 text-2xl font-bold text-gray-900">Discovery Elementary</p>
-            <p className="mt-3 text-sm text-gray-600">
-              5275 N 36th St, Arlington, VA 22207
-            </p>
-          </div>
-          <div className="rounded-3xl border border-lime-100 bg-lime-50/60 p-6 shadow-sm">
-            <Medal className="h-6 w-6 text-lime-500" />
-            <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-lime-600">Tone</p>
-            <p className="mt-2 text-lg font-semibold text-gray-900">Supportive & Celebratory</p>
-            <p className="mt-3 text-sm text-gray-600">
-              This isn’t a public race. It’s our team’s victory lap. Keep the vibes easy, encouraging, and fun.
-            </p>
-          </div>
-        </section>
-
-        <section className="mt-10 rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
+        {/* Volunteer Roles with Individual Slots */}
+        <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gray-400">Volunteer Roles</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gray-400">Available Roles</p>
               <h2 className="mt-2 text-2xl font-semibold text-gray-900">Where We Need You</h2>
               <p className="mt-3 max-w-2xl text-sm text-gray-600">
-                Pick the role that fits best. We’re focusing on guiding, pacing, and celebrating our runners. Optional
-                future roles are noted below for reference.
+                Each role has specific slots available. Sign up for the slot that works best for you.
               </p>
             </div>
-            <Link
-              to="/volunteer/signup"
-              className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-orange-600 transition hover:border-orange-300 hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-200"
-            >
-              <ArrowRight className="h-3 w-3" />
-              <span>Volunteer Signup</span>
-            </Link>
           </div>
-          <div className="mt-6 overflow-hidden rounded-2xl border border-gray-100">
-            <table className="min-w-full divide-y divide-gray-100 text-sm">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th scope="col" className="px-4 py-3 text-left font-semibold text-gray-600">
-                    Role
-                  </th>
-                  <th scope="col" className="px-4 py-3 text-left font-semibold text-gray-600">
-                    Description
-                  </th>
-                  <th scope="col" className="hidden px-4 py-3 text-left font-semibold text-gray-600 sm:table-cell">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
-                {volunteerRoles.map((role) => (
-                  <tr key={role.id} className="transition hover:bg-orange-50/50">
-                    <td className="px-4 py-4">
-                      <p className="font-medium text-gray-900">{role.name}</p>
-                      {role.slots && <p className="mt-1 text-xs uppercase tracking-wide text-gray-400">{role.slots}</p>}
-                    </td>
-                    <td className="px-4 py-4 text-gray-600">{role.description}</td>
-                    <td className="hidden px-4 py-4 text-sm sm:table-cell">
-                      {role.isActive ? (
-                        <span className="inline-flex items-center rounded-full bg-lime-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-lime-700">
-                          Open
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          Optional (Future)
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+          <div className="mt-8 space-y-8">
+            {rolesWithSlots.map(({ role, slots }) => (
+              <div key={role.id} className="rounded-2xl border border-gray-100 bg-gray-50/50 p-6">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">{role.name}</h3>
+                  <p className="mt-1 text-sm text-gray-600">{role.description}</p>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {slots.map((slot) => {
+                    const availability = slotAvailability[slot.id];
+                    const isFilled = availability?.filled > 0;
+                    const filledBy = availability?.volunteers[0];
+
+                    return (
+                      <div
+                        key={slot.id}
+                        className={`rounded-xl border-2 p-4 transition ${
+                          isFilled
+                            ? 'border-lime-200 bg-lime-50/50'
+                            : 'border-orange-200 bg-white hover:border-orange-300 hover:shadow-sm'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <p className="font-medium text-gray-900">{slot.roleName}</p>
+                            {isFilled && filledBy && (
+                              <p className="mt-1 text-xs text-gray-600">
+                                Filled by {filledBy.name}
+                              </p>
+                            )}
+                          </div>
+                          <div className="ml-3">
+                            {isFilled ? (
+                              <CheckCircle2 className="h-5 w-5 text-lime-600" />
+                            ) : (
+                              <XCircle className="h-5 w-5 text-orange-500" />
+                            )}
+                          </div>
+                        </div>
+                        <div className="mt-3">
+                          {isFilled ? (
+                            <span className="inline-flex items-center rounded-full bg-lime-100 px-2.5 py-1 text-xs font-semibold text-lime-700">
+                              Filled
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center rounded-full bg-orange-100 px-2.5 py-1 text-xs font-semibold text-orange-700">
+                              Available
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
+        {/* CTA Section */}
         <section className="mt-10 rounded-3xl border border-dashed border-orange-200 bg-orange-50/50 p-8 text-center shadow-sm">
-          <h3 className="text-xl font-semibold text-gray-900">Thank you for being part of the finish-line crew.</h3>
+          <h3 className="text-xl font-semibold text-gray-900">Ready to Help?</h3>
           <p className="mt-3 text-sm text-gray-600">
-            Volunteers make this final run special. Bring your best energy and a warm smile—we’ll take care of the rest.
+            Thank you for being part of the finish-line crew. Volunteers make this final run special.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-4">
             <Link
               to="/volunteer/signup"
               className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
             >
-              <span>Sign Up to Help</span>
+              <span>Sign Up to Volunteer</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
@@ -220,4 +218,3 @@ const VolunteerOverview = () => {
 };
 
 export default VolunteerOverview;
-

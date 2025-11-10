@@ -1,12 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CalendarDays, MapPin, Medal, ArrowRight, Map } from 'lucide-react';
-import { BGR5K_CONFIG } from '../config/bgr5kConfig.js';
+import { CalendarDays, MapPin, Medal, ArrowRight, Map, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { BGR5K_CONFIG } from '../config/bgr5kConfig';
 
 const RaceOverview = () => {
+  const [showMapDetails, setShowMapDetails] = useState(false);
+
   useEffect(() => {
     document.title = 'BGR Discovery 5k';
   }, []);
+
+  // Google Maps search URL (no API key needed)
+  const mapSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BGR5K_CONFIG.address)}`;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white">
@@ -29,15 +34,15 @@ const RaceOverview = () => {
               <span>Volunteer Opportunities</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
-                   <a
-                     href={BGR5K_CONFIG.stravaRouteUrl}
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-offset-2"
-                   >
-                     <Map className="h-4 w-4" />
-                     <span>View 5K Course Map</span>
-                   </a>
+            <a
+              href={BGR5K_CONFIG.stravaRouteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-offset-2"
+            >
+              <Map className="h-4 w-4" />
+              <span>View 5K Course Map</span>
+            </a>
           </div>
         </header>
 
@@ -54,8 +59,8 @@ const RaceOverview = () => {
           <div className="rounded-3xl border border-sky-100 bg-sky-50/60 p-6 shadow-sm">
             <MapPin className="h-6 w-6 text-sky-500" />
             <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-sky-600">Location</p>
-                   <p className="mt-2 text-2xl font-bold text-gray-900">{BGR5K_CONFIG.location}</p>
-                   <p className="mt-3 text-sm text-gray-600">{BGR5K_CONFIG.address}</p>
+            <p className="mt-2 text-2xl font-bold text-gray-900">{BGR5K_CONFIG.location}</p>
+            <p className="mt-3 text-sm text-gray-600">{BGR5K_CONFIG.address}</p>
           </div>
           <div className="rounded-3xl border border-lime-100 bg-lime-50/60 p-6 shadow-sm">
             <Medal className="h-6 w-6 text-lime-500" />
@@ -65,6 +70,65 @@ const RaceOverview = () => {
               This isn't a public race. It's our team's victory lap. Keep the vibes easy, encouraging, and fun.
             </p>
           </div>
+        </section>
+
+        {/* Interactive Map Section */}
+        <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-blue-500 p-3">
+                <MapPin className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">Race Location</h2>
+                <p className="mt-1 text-sm text-gray-600">{BGR5K_CONFIG.location}</p>
+                <p className="text-sm text-gray-500">{BGR5K_CONFIG.address}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowMapDetails(!showMapDetails)}
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200"
+            >
+              {showMapDetails ? (
+                <>
+                  <span>Hide Map</span>
+                  <ChevronUp className="h-4 w-4" />
+                </>
+              ) : (
+                <>
+                  <span>Show Map</span>
+                  <ChevronDown className="h-4 w-4" />
+                </>
+              )}
+            </button>
+          </div>
+
+          {showMapDetails && (
+            <div className="mt-6 rounded-2xl overflow-hidden border border-gray-200 bg-gray-50">
+              <div className="aspect-video bg-gray-200 flex items-center justify-center">
+                <div className="text-center">
+                  <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-sm font-medium text-gray-600 mb-2">{BGR5K_CONFIG.location}</p>
+                  <p className="text-xs text-gray-500 mb-4">{BGR5K_CONFIG.address}</p>
+                  <a
+                    href={mapSearchUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-md hover:bg-blue-600 transition"
+                  >
+                    <Map className="h-4 w-4" />
+                    <span>View on Google Maps</span>
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </div>
+              </div>
+              <div className="bg-white px-4 py-3 border-t border-gray-200">
+                <p className="text-xs text-gray-500">
+                  Click the button above to open the location in Google Maps for directions and more details.
+                </p>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Route Information */}
@@ -80,28 +144,29 @@ const RaceOverview = () => {
                 <div className="mt-3 flex flex-wrap gap-4 text-sm">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-gray-700">Distance:</span>
-                    <span className="text-gray-600">3.2 mi</span>
+                    <span className="text-gray-600">{BGR5K_CONFIG.distance}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-gray-700">Elevation:</span>
-                    <span className="text-gray-600">300 ft</span>
+                    <span className="text-gray-600">{BGR5K_CONFIG.elevation}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-gray-700">Difficulty:</span>
                     <span className="inline-flex items-center rounded-full bg-lime-100 px-2 py-1 text-xs font-semibold text-lime-700">
-                      Easy
+                      {BGR5K_CONFIG.difficulty}
                     </span>
                   </div>
                 </div>
               </div>
             </div>
             <a
-              href={EVENT_CONFIG.stravaRouteUrl}
+              href={BGR5K_CONFIG.stravaRouteUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2.5 text-sm font-semibold text-blue-600 transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200"
             >
               <span>View Full Route</span>
+              <ArrowRight className="h-4 w-4" />
             </a>
           </div>
         </section>
@@ -128,4 +193,3 @@ const RaceOverview = () => {
 };
 
 export default RaceOverview;
-

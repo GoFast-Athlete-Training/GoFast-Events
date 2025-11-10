@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Loader2, RefreshCcw, Users } from 'lucide-react';
-import { volunteerRoles } from '../data/volunteerRoles';
+import { activeVolunteerSlots } from '../data/volunteerRoles';
 import { buildApiUrl } from '../lib/api';
-import { getBGR5KEventId } from '../config/bgr5kConfig.js';
+import { getBGR5KEventId } from '../config/bgr5kConfig';
 
 type VolunteerEntry = {
   id: string;
@@ -27,8 +27,9 @@ const formatTimestamp = (value: string) => {
   });
 };
 
-const roleLabelMap = volunteerRoles.reduce<Record<string, string>>((acc, role) => {
-  acc[role.id] = role.name;
+// Create a map from backend role names to display names
+const roleLabelMap = activeVolunteerSlots.reduce<Record<string, string>>((acc, slot) => {
+  acc[slot.roleName] = slot.roleName; // Backend stores slot.roleName, so we use it directly
   return acc;
 }, {});
 
@@ -172,9 +173,9 @@ const VolunteerRoster = () => {
                       <tr key={volunteer.id} className="transition hover:bg-orange-50/40">
                         <td className="px-4 py-4 font-medium text-gray-900">{volunteer.name}</td>
                         <td className="hidden px-4 py-4 text-gray-600 md:table-cell">{volunteer.email}</td>
-                        <td className="px-4 py-4 text-gray-700">
-                          {roleLabelMap[volunteer.role] ?? volunteer.role}
-                        </td>
+                              <td className="px-4 py-4 text-gray-700">
+                                {volunteer.role}
+                              </td>
                         <td className="hidden px-4 py-4 text-gray-500 lg:table-cell">
                           {volunteer.note ? volunteer.note : <span className="text-gray-400">—</span>}
                         </td>

@@ -1,10 +1,10 @@
 import { FormEvent, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle2, Loader2, ArrowLeft } from 'lucide-react';
-import { activeVolunteerRoles } from '../data/volunteerRoles';
+import { activeVolunteerSlots } from '../data/volunteerRoles';
 import { buildApiUrl } from '../lib/api';
 import { mapRoleIdToRoleName } from '../services/UniversalEventMapperService';
-import { getBGR5KEventId } from '../config/bgr5kConfig.js';
+import { getBGR5KEventId } from '../config/bgr5kConfig';
 
 type FormState = {
   name: string;
@@ -16,7 +16,7 @@ type FormState = {
 const defaultFormState: FormState = {
   name: '',
   email: '',
-  roleId: activeVolunteerRoles[0]?.id ?? '',
+  roleId: activeVolunteerSlots[0]?.id ?? '',
   note: '',
 };
 
@@ -178,7 +178,7 @@ const VolunteerSignup = () => {
 
             <div className="flex flex-col gap-2">
               <label htmlFor="volunteer-role" className="text-sm font-semibold text-gray-800">
-                Volunteer Role<span className="text-orange-500">*</span>
+                Volunteer Slot<span className="text-orange-500">*</span>
               </label>
               <select
                 id="volunteer-role"
@@ -188,12 +188,15 @@ const VolunteerSignup = () => {
                 className="rounded-2xl border border-gray-200 px-4 py-3 text-sm shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200"
                 required
               >
-                {activeVolunteerRoles.map((role) => (
-                  <option key={role.id} value={role.id}>
-                    {role.name}
+                {activeVolunteerSlots.map((slot) => (
+                  <option key={slot.id} value={slot.id}>
+                    {slot.roleName}
                   </option>
                 ))}
               </select>
+              <p className="mt-1 text-xs text-gray-500">
+                Each slot is individual - sign up for the specific role you want to fill.
+              </p>
             </div>
 
             <div className="flex flex-col gap-2">
