@@ -19,7 +19,6 @@ export const EVENT_CONFIG = {
   location: 'Discovery Elementary',
   address: '5275 N 36th St, Arlington, VA 22207',
   stravaRouteUrl: 'https://www.strava.com/routes/3420808564668746102',
-  stravaRouteId: '3420808564668746102',
 };
 
 /**
