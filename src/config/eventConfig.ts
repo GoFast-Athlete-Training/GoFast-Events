@@ -8,9 +8,8 @@
  */
 
 export const EVENT_CONFIG = {
-  // Set this after creating the event in EventManagement
-  // Format: 'clxxxxxxxxxxxxxx' (cuid from database)
-  eventId: '', // TODO: Set this after event creation
+  // Event ID from database (created in EventManagement)
+  eventId: 'cmht9p0800001p21xn5tjp5nc', // Boys Gotta Run – Discovery 5K event
 
   // Event details (for display, can be hydrated from backend)
   eventName: 'Boys Gotta Run – Discovery 5K',
