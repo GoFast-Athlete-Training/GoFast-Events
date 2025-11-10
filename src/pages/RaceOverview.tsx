@@ -1,17 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { CalendarDays, MapPin, Medal, ArrowRight, Map, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { CalendarDays, MapPin, Medal, ArrowRight, Map, Users, Navigation } from 'lucide-react';
 import { BGR5K_CONFIG } from '../config/bgr5kConfig';
 
 const RaceOverview = () => {
-  const [showMapDetails, setShowMapDetails] = useState(false);
-
   useEffect(() => {
     document.title = 'BGR Discovery 5k';
   }, []);
-
-  // Google Maps search URL (no API key needed)
-  const mapSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BGR5K_CONFIG.address)}`;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white">
@@ -26,27 +21,9 @@ const RaceOverview = () => {
             It's the final week of our Boys Gotta Run season. We're keeping it low-key, warm, and all about the kids.
             Join us for a celebratory 5K run that honors the journey and celebrates every finish.
           </p>
-          <div className="mt-6 flex flex-wrap gap-4">
-            <Link
-              to="/volunteer"
-              className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
-            >
-              <span>Volunteer Opportunities</span>
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <a
-              href={BGR5K_CONFIG.stravaRouteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-offset-2"
-            >
-              <Map className="h-4 w-4" />
-              <span>View 5K Course Map</span>
-            </a>
-          </div>
         </header>
 
-        {/* Race Details */}
+        {/* Quick Info Cards */}
         <section className="mt-8 grid gap-6 lg:grid-cols-3">
           <div className="rounded-3xl border border-orange-100 bg-orange-50/60 p-6 shadow-sm">
             <CalendarDays className="h-6 w-6 text-orange-500" />
@@ -72,66 +49,63 @@ const RaceOverview = () => {
           </div>
         </section>
 
-        {/* Interactive Map Section */}
-        <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-blue-500 p-3">
-                <MapPin className="h-6 w-6 text-white" />
+        {/* Main Action Buttons */}
+        <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Volunteer Opportunities */}
+          <Link
+            to="/volunteer"
+            className="group rounded-3xl border-2 border-orange-200 bg-white p-6 shadow-sm transition hover:border-orange-400 hover:shadow-md"
+          >
+            <div className="flex items-center gap-4">
+              <div className="rounded-2xl bg-orange-500 p-3 group-hover:bg-orange-600 transition">
+                <Users className="h-6 w-6 text-white" />
               </div>
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900">Race Location</h2>
-                <p className="mt-1 text-sm text-gray-600">{BGR5K_CONFIG.location}</p>
-                <p className="text-sm text-gray-500">{BGR5K_CONFIG.address}</p>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-900">Volunteer Opportunities</h3>
+                <p className="mt-1 text-sm text-gray-600">
+                  Help make this run special for our young athletes
+                </p>
               </div>
+              <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-orange-600 transition" />
             </div>
-            <button
-              onClick={() => setShowMapDetails(!showMapDetails)}
-              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200"
-            >
-              {showMapDetails ? (
-                <>
-                  <span>Hide Map</span>
-                  <ChevronUp className="h-4 w-4" />
-                </>
-              ) : (
-                <>
-                  <span>Show Map</span>
-                  <ChevronDown className="h-4 w-4" />
-                </>
-              )}
-            </button>
-          </div>
+          </Link>
 
-          {showMapDetails && (
-            <div className="mt-6 rounded-2xl overflow-hidden border border-gray-200 bg-gray-50">
-              <div className="aspect-video bg-gray-200 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                  <p className="text-sm font-medium text-gray-600 mb-2">{BGR5K_CONFIG.location}</p>
-                  <p className="text-xs text-gray-500 mb-4">{BGR5K_CONFIG.address}</p>
-                  <a
-                    href={mapSearchUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-md hover:bg-blue-600 transition"
-                  >
-                    <Map className="h-4 w-4" />
-                    <span>View on Google Maps</span>
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </div>
+          {/* Course Overview */}
+          <Link
+            to="/course"
+            className="group rounded-3xl border-2 border-blue-200 bg-white p-6 shadow-sm transition hover:border-blue-400 hover:shadow-md"
+          >
+            <div className="flex items-center gap-4">
+              <div className="rounded-2xl bg-blue-500 p-3 group-hover:bg-blue-600 transition">
+                <Map className="h-6 w-6 text-white" />
               </div>
-              <div className="bg-white px-4 py-3 border-t border-gray-200">
-                <p className="text-xs text-gray-500">
-                  Click the button above to open the location in Google Maps for directions and more details.
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-900">See Course</h3>
+                <p className="mt-1 text-sm text-gray-600">
+                  View the route, map, and video walkthrough
+                </p>
+              </div>
+              <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition" />
+            </div>
+          </Link>
+
+          {/* Final Preps */}
+          <div className="rounded-3xl border-2 border-dashed border-gray-300 bg-gray-50 p-6">
+            <div className="flex items-center gap-4">
+              <div className="rounded-2xl bg-gray-400 p-3">
+                <Medal className="h-6 w-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-700">Final Preps</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Coming soon - race day checklist
                 </p>
               </div>
             </div>
-          )}
+          </div>
         </section>
 
-        {/* Route Information */}
+        {/* Course Route Preview */}
         <section className="mt-8 rounded-3xl border border-blue-100 bg-blue-50/60 p-6 shadow-sm">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-4">
@@ -159,15 +133,13 @@ const RaceOverview = () => {
                 </div>
               </div>
             </div>
-            <a
-              href={BGR5K_CONFIG.stravaRouteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to="/course"
               className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2.5 text-sm font-semibold text-blue-600 transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200"
             >
-              <span>View Full Route</span>
+              <span>View Course Details</span>
               <ArrowRight className="h-4 w-4" />
-            </a>
+            </Link>
           </div>
         </section>
 
