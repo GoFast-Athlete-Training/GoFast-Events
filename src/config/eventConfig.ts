@@ -1,49 +1,19 @@
 /**
- * Event Configuration for Boys Gotta Run – Discovery 5K
+ * Event Configuration (Universal)
  * 
- * This eventId is set after event creation in the main backend (EventManagement).
- * Once an event is created, copy the eventId here.
- * 
- * This is a hardcoded config for this specific event instance.
+ * This file imports the BGR-specific config.
+ * For Boys Gotta Run – Discovery 5K, see bgr5kConfig.js
  */
 
-export const EVENT_CONFIG = {
-  // Event ID from database (created in EventManagement)
-  eventId: 'cmht9p0800001p21xn5tjp5nc', // Boys Gotta Run – Discovery 5K event
+import { BGR5K_CONFIG, getBGR5KEventId } from './bgr5kConfig.js';
 
-  // Event details (for display, can be hydrated from backend)
-  eventName: 'Boys Gotta Run – Discovery 5K',
-  eventDate: '2025-11-12',
-  eventTime: '7:55 AM',
-  location: 'Discovery Elementary',
-  address: '5275 N 36th St, Arlington, VA 22207',
-  stravaRouteUrl: 'https://www.strava.com/routes/3420808564668746102',
-};
+// Export BGR5K config as EVENT_CONFIG for backward compatibility
+export const EVENT_CONFIG = BGR5K_CONFIG;
 
 /**
- * Get eventId from config or localStorage
- * Falls back to localStorage if config is empty (for dynamic setting)
+ * Get eventId from BGR5K config
  */
 export const getEventId = (): string => {
-  // Check config first
-  if (EVENT_CONFIG.eventId) {
-    return EVENT_CONFIG.eventId;
-  }
-
-  // Fallback to localStorage (can be set dynamically)
-  const storedEventId = localStorage.getItem('boysGottaRunEventId');
-  if (storedEventId) {
-    return storedEventId;
-  }
-
-  // Return empty string if not set
-  return '';
-};
-
-/**
- * Set eventId in localStorage (for dynamic setting)
- */
-export const setEventId = (eventId: string): void => {
-  localStorage.setItem('boysGottaRunEventId', eventId);
+  return getBGR5KEventId();
 };
 

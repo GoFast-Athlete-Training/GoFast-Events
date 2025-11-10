@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, CalendarDays, MapPin, Medal, Map, ExternalLink } from 'lucide-react';
 import { volunteerRoles } from '../data/volunteerRoles';
-import { EVENT_CONFIG } from '../config/eventConfig';
+import { BGR5K_CONFIG } from '../config/bgr5kConfig.js';
 
 type RouteInfo = {
   distance?: string;
@@ -51,9 +51,9 @@ const VolunteerOverview = () => {
               <span>Sign Up to Help</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
-            {EVENT_CONFIG.stravaRouteUrl && (
+            {BGR5K_CONFIG.stravaRouteUrl && (
               <a
-                href={EVENT_CONFIG.stravaRouteUrl}
+                href={BGR5K_CONFIG.stravaRouteUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-offset-2"
@@ -93,9 +93,9 @@ const VolunteerOverview = () => {
                 </div>
               </div>
             </div>
-            {EVENT_CONFIG.stravaRouteUrl && (
+            {BGR5K_CONFIG.stravaRouteUrl && (
               <a
-                href={EVENT_CONFIG.stravaRouteUrl}
+                href={BGR5K_CONFIG.stravaRouteUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2.5 text-sm font-semibold text-blue-600 transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200"

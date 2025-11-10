@@ -4,7 +4,7 @@ import { CheckCircle2, Loader2, ArrowLeft } from 'lucide-react';
 import { activeVolunteerRoles } from '../data/volunteerRoles';
 import { buildApiUrl } from '../lib/api';
 import { mapRoleIdToRoleName } from '../services/UniversalEventMapperService';
-import { getEventId } from '../config/eventConfig';
+import { getBGR5KEventId } from '../config/bgr5kConfig.js';
 
 type FormState = {
   name: string;
@@ -58,10 +58,10 @@ const VolunteerSignup = () => {
     setErrorMessage(null);
 
     try {
-      // Get eventId from config/localStorage
-      const eventId = getEventId();
+      // Get eventId from BGR5K config
+      const eventId = getBGR5KEventId();
       if (!eventId) {
-        throw new Error('Event ID not configured. Please set eventId in config.');
+        throw new Error('Event ID not configured. Please set eventId in bgr5kConfig.js');
       }
 
       // Map role ID to role name string for backend

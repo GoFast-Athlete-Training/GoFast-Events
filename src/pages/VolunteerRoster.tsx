@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Loader2, RefreshCcw, Users } from 'lucide-react';
 import { volunteerRoles } from '../data/volunteerRoles';
 import { buildApiUrl } from '../lib/api';
-import { getEventId } from '../config/eventConfig';
+import { getBGR5KEventId } from '../config/bgr5kConfig.js';
 
 type VolunteerEntry = {
   id: string;
@@ -46,10 +46,10 @@ const VolunteerRoster = () => {
     setErrorMessage(null);
 
     try {
-      // Get eventId from config/localStorage
-      const eventId = getEventId();
+      // Get eventId from BGR5K config
+      const eventId = getBGR5KEventId();
       if (!eventId) {
-        throw new Error('Event ID not configured. Please set eventId in config.');
+        throw new Error('Event ID not configured. Please set eventId in bgr5kConfig.js');
       }
 
       const response = await fetch(buildApiUrl(`/api/event-volunteer?eventId=${eventId}`));

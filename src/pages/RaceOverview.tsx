@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarDays, MapPin, Medal, ArrowRight, Map } from 'lucide-react';
-import { EVENT_CONFIG } from '../config/eventConfig';
+import { BGR5K_CONFIG } from '../config/bgr5kConfig.js';
 
 const RaceOverview = () => {
   useEffect(() => {
@@ -29,15 +29,15 @@ const RaceOverview = () => {
               <span>Volunteer Opportunities</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <a
-              href={EVENT_CONFIG.stravaRouteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-offset-2"
-            >
-              <Map className="h-4 w-4" />
-              <span>View 5K Course Map</span>
-            </a>
+                   <a
+                     href={BGR5K_CONFIG.stravaRouteUrl}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-offset-2"
+                   >
+                     <Map className="h-4 w-4" />
+                     <span>View 5K Course Map</span>
+                   </a>
           </div>
         </header>
 
@@ -54,8 +54,8 @@ const RaceOverview = () => {
           <div className="rounded-3xl border border-sky-100 bg-sky-50/60 p-6 shadow-sm">
             <MapPin className="h-6 w-6 text-sky-500" />
             <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-sky-600">Location</p>
-            <p className="mt-2 text-2xl font-bold text-gray-900">{EVENT_CONFIG.location}</p>
-            <p className="mt-3 text-sm text-gray-600">{EVENT_CONFIG.address}</p>
+                   <p className="mt-2 text-2xl font-bold text-gray-900">{BGR5K_CONFIG.location}</p>
+                   <p className="mt-3 text-sm text-gray-600">{BGR5K_CONFIG.address}</p>
           </div>
           <div className="rounded-3xl border border-lime-100 bg-lime-50/60 p-6 shadow-sm">
             <Medal className="h-6 w-6 text-lime-500" />
