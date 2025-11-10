@@ -15,7 +15,7 @@ const VolunteerOverview = () => {
       name: 'Course Marshals',
       icon: Navigation,
       color: 'orange',
-      description: 'Guide runners at key points along the course and ensure they stay on track. Some positions may need Gatorade.',
+      description: 'Guide runners at key points along the course and ensure they stay on track.',
       link: '/volunteer/marshal',
       details: '7 positions available with repositioning',
     },
@@ -141,22 +141,6 @@ const VolunteerOverview = () => {
               </Link>
             );
           })}
-        </section>
-
-        {/* Gatorade Information */}
-        <section className="mt-8 rounded-3xl border border-blue-100 bg-blue-50/60 p-6 shadow-sm">
-          <div className="flex items-start gap-4">
-            <div className="rounded-2xl bg-blue-500 p-3">
-              <Droplet className="h-6 w-6 text-white" />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-xl font-semibold text-gray-900">Can You Bring Gatorade?</h2>
-              <p className="mt-2 text-sm text-gray-600">
-                Some marshal positions and water stations could use Gatorade or other sports drinks to keep our runners hydrated and energized. 
-                If you're able to bring Gatorade, please note it in your signup when you choose a marshal or water station role!
-              </p>
-            </div>
-          </div>
         </section>
 
         {/* Quick Sign Up CTA */}
