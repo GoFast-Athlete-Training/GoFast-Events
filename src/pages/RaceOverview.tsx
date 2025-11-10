@@ -58,12 +58,14 @@ const RaceOverview = () => {
                 borderRadius: "16px",
                 overflow: "hidden",
                 boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                maxHeight: "300px",
               }}
+              className="flex items-center justify-center"
             >
               <img
                 src="/StravaMap-BGR5K.png"
                 alt="BGR Discovery 5K Course Map"
-                className="w-full h-auto"
+                className="w-full h-auto max-h-[300px] object-contain"
               />
             </div>
           ) : (
@@ -78,7 +80,7 @@ const RaceOverview = () => {
               <iframe
                 src="https://www.strava.com/routes/3420808564668746102/embed"
                 width="100%"
-                height="405"
+                height="300"
                 frameBorder="0"
                 allowTransparency={true}
                 scrolling="no"
