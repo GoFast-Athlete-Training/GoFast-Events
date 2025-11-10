@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Users, Navigation, Zap, Trophy, Droplet } from 'lucide-react';
+import { ArrowRight, Users, Navigation, Zap, Trophy, Droplet, Home } from 'lucide-react';
 
 const VolunteerOverview = () => {
   useEffect(() => {
@@ -15,7 +15,7 @@ const VolunteerOverview = () => {
       color: 'orange',
       description: 'Guide runners at key points along the course and ensure they stay on track. Some positions may need Gatorade.',
       link: '/volunteer/marshal',
-      details: '5 positions available along the course',
+      details: '7 positions available with repositioning',
     },
     {
       id: 'pacer',
@@ -39,6 +39,40 @@ const VolunteerOverview = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white">
+      {/* Sticky Top Navigation */}
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+        <div className="mx-auto max-w-5xl px-6 py-4 sm:px-8 lg:px-10">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-orange-600 transition"
+              >
+                <Home className="h-4 w-4" />
+                <span>Home</span>
+              </Link>
+              <span className="text-gray-300">|</span>
+              <span className="text-sm font-semibold text-orange-600">Volunteer Opportunities</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Link
+                to="/volunteer/signup"
+                className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-md transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              >
+                <Users className="h-3 w-3" />
+                <span>Sign Up</span>
+              </Link>
+              <Link
+                to="/volunteer/roster"
+                className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600"
+              >
+                <span>Roster</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10">
         {/* Hero Section */}
         <header className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-gray-100">
