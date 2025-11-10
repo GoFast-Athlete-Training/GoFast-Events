@@ -323,10 +323,10 @@ const InlineSignupRow = ({
           {showDeleteWarning && (
             <div className="rounded-lg border-2 border-red-200 bg-red-50 p-3">
               <p className="text-xs font-semibold text-red-900 mb-2">
-                ⚠️ Warning: You must enter YOUR email to confirm
+                ⚠️ Remove your signup?
               </p>
               <p className="text-xs text-red-700 mb-3">
-                Please only remove your own signup. You'll be prompted for your email - the backend will verify it matches before deleting. This action cannot be undone.
+                Please only remove your own signup. You'll confirm with your email. This can't be undone.
               </p>
               <div className="flex items-center gap-2">
                 <button
