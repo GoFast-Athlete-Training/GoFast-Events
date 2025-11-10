@@ -8,6 +8,8 @@ const RaceOverview = () => {
 
   useEffect(() => {
     document.title = 'BGR Discovery 5k';
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
   }, []);
 
   return (
@@ -147,6 +149,7 @@ const RaceOverview = () => {
           {/* Volunteer Opportunities */}
           <Link
             to="/volunteer"
+            onClick={() => window.scrollTo(0, 0)}
             className="group rounded-3xl border-2 border-orange-200 bg-white p-6 shadow-sm transition hover:border-orange-400 hover:shadow-md"
           >
             <div className="flex items-center gap-4">
@@ -166,6 +169,7 @@ const RaceOverview = () => {
           {/* Course Overview */}
           <Link
             to="/course"
+            onClick={() => window.scrollTo(0, 0)}
             className="group rounded-3xl border-2 border-blue-200 bg-white p-6 shadow-sm transition hover:border-blue-400 hover:shadow-md"
           >
             <div className="flex items-center gap-4">
@@ -185,6 +189,7 @@ const RaceOverview = () => {
           {/* Final Preps */}
           <Link
             to="/final-preps"
+            onClick={() => window.scrollTo(0, 0)}
             className="group rounded-3xl border-2 border-lime-200 bg-white p-6 shadow-sm transition hover:border-lime-400 hover:shadow-md"
           >
             <div className="flex items-center gap-4">

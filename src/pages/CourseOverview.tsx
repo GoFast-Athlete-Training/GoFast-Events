@@ -11,6 +11,8 @@ const CourseOverview = () => {
 
   useEffect(() => {
     document.title = 'BGR Discovery 5k - Course Overview';
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
   }, []);
 
   // YouTube embed URL - extract video ID from the full URL

@@ -5,6 +5,8 @@ import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 const FinalPreps = () => {
   useEffect(() => {
     document.title = 'BGR Discovery 5k - Final Preps';
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
   }, []);
 
   const preps = [
@@ -23,6 +25,7 @@ const FinalPreps = () => {
         <header className="mb-8">
           <Link
             to="/"
+            onClick={() => window.scrollTo(0, 0)}
             className="inline-flex items-center gap-2 text-sm font-semibold text-orange-600 hover:text-orange-700 transition mb-4"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -68,6 +71,7 @@ const FinalPreps = () => {
         <section className="mt-8 flex flex-wrap gap-4">
           <Link
             to="/"
+            onClick={() => window.scrollTo(0, 0)}
             className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600"
           >
             <ArrowLeft className="h-4 w-4" />
