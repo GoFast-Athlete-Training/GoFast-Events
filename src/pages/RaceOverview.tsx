@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarDays, MapPin, Medal, ArrowRight, Map, Users, ExternalLink } from 'lucide-react';
 import { BGR5K_CONFIG } from '../config/bgr5kConfig';
 
 const RaceOverview = () => {
+  const [showInteractiveMap, setShowInteractiveMap] = useState(false);
+
   useEffect(() => {
     document.title = 'BGR Discovery 5k';
   }, []);
@@ -23,7 +25,7 @@ const RaceOverview = () => {
           </p>
         </header>
 
-        {/* Strava Route Map Embed - Above everything */}
+        {/* Strava Route Map - Static image with interactive option */}
         <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
@@ -31,7 +33,7 @@ const RaceOverview = () => {
               Course Route Map
             </h2>
             <p className="mt-1 text-sm text-gray-600">
-              Interactive course map with elevation profile and turn-by-turn navigation.
+              {showInteractiveMap ? 'Interactive course map with elevation profile and turn-by-turn navigation.' : 'View the course route and elevation profile.'}
             </p>
             <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
               <span>Distance: {BGR5K_CONFIG.distance}</span>
@@ -39,36 +41,67 @@ const RaceOverview = () => {
               <span>Elevation: {BGR5K_CONFIG.elevation}</span>
             </div>
           </div>
-          <div
-            style={{
-              borderRadius: "16px",
-              overflow: "hidden",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-            }}
-          >
-            <iframe
-              src="https://www.strava.com/routes/3420808564668746102/embed"
-              width="100%"
-              height="405"
-              frameBorder="0"
-              allowTransparency={true}
-              scrolling="no"
-              title="Strava Course Map"
-            />
-          </div>
+          
+          {!showInteractiveMap ? (
+            /* Static Image */
+            <div
+              style={{
+                borderRadius: "16px",
+                overflow: "hidden",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              }}
+            >
+              <img
+                src="/StravaMap-BGR5K.png"
+                alt="BGR Discovery 5K Course Map"
+                className="w-full h-auto"
+              />
+            </div>
+          ) : (
+            /* Interactive Iframe */
+            <div
+              style={{
+                borderRadius: "16px",
+                overflow: "hidden",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              }}
+            >
+              <iframe
+                src="https://www.strava.com/routes/3420808564668746102/embed"
+                width="100%"
+                height="405"
+                frameBorder="0"
+                allowTransparency={true}
+                scrolling="no"
+                title="Strava Course Map"
+              />
+            </div>
+          )}
+          
           <div className="mt-3 flex items-center justify-between">
             <span className="text-xs text-gray-500">
-              Interactive map powered by Strava
+              {showInteractiveMap ? 'Interactive map powered by Strava' : 'Static course preview'}
             </span>
-            <a
-              href={BGR5K_CONFIG.stravaRouteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-orange-600 hover:text-orange-700 font-medium transition"
-            >
-              <span>Open in Strava</span>
-              <ExternalLink className="h-3 w-3" />
-            </a>
+            <div className="flex items-center gap-3">
+              {!showInteractiveMap && (
+                <button
+                  onClick={() => setShowInteractiveMap(true)}
+                  className="inline-flex items-center gap-1 text-xs text-orange-600 hover:text-orange-700 font-semibold transition"
+                >
+                  <Map className="h-3 w-3" />
+                  <span>View Interactive Map</span>
+                </button>
+              )}
+              <a
+                href={BGR5K_CONFIG.stravaRouteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs text-orange-600 hover:text-orange-700 font-medium transition"
+              >
+                <span>Open in Strava</span>
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
           </div>
         </section>
 
