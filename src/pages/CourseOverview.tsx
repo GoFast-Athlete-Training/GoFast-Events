@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Map, ExternalLink, ChevronDown, ChevronUp, Navigation, ArrowRight, Users } from 'lucide-react';
+import { MapPin, Map, ExternalLink, ChevronDown, ChevronUp, Navigation, ArrowRight, Users, Route } from 'lucide-react';
 import { BGR5K_CONFIG } from '../config/bgr5kConfig';
 
 const CourseOverview = () => {
@@ -17,9 +17,91 @@ const CourseOverview = () => {
   const youtubeVideoId = 'Xu6qPu2frNk';
   const youtubeEmbedUrl = `https://www.youtube.com/embed/${youtubeVideoId}`;
 
+  // All route points along the course
+  const routePoints = [
+    {
+      id: 'route-1',
+      location: 'Kensington → 37th St',
+      description: 'Right turn uphill from Kensington onto 37th.',
+      mile: '0.22',
+    },
+    {
+      id: 'route-2',
+      location: 'Along Valleywood Dr',
+      description: 'Long gradual curve; steady residential stretch.',
+      mile: '0.30–0.75',
+    },
+    {
+      id: 'route-3',
+      location: 'Valleywood → Vermont Ave',
+      description: 'Left turn just before Old Dominion Dr; short section on Vermont.',
+      mile: '0.75',
+    },
+    {
+      id: 'route-4',
+      location: 'Vermont → Massachusetts Ave',
+      description: 'Left turn onto Massachusetts; cars may approach downhill from the right.',
+      mile: '0.82',
+    },
+    {
+      id: 'route-5',
+      location: 'Massachusetts → Rhode Island Ave (via Rockingham)',
+      description: 'Right turn where Rockingham connects into Rhode Island.',
+      mile: '1.09',
+    },
+    {
+      id: 'route-6',
+      location: 'Rhode Island → Virginia Ave',
+      description: 'Left turn continuing through residential area.',
+      mile: '1.17',
+    },
+    {
+      id: 'route-7',
+      location: 'Virginia Ave corner (Virginia → Virginia transition)',
+      description: 'Gentle bend keeping runners on Virginia Ave alignment.',
+      mile: '1.31',
+    },
+    {
+      id: 'route-8',
+      location: 'Virginia → Nottingham St',
+      description: 'Right turn beginning final neighborhood stretch.',
+      mile: '~2.00',
+    },
+    {
+      id: 'route-9',
+      location: 'Rockingham interchange on Nottingham',
+      description: 'Brief left-then-right transition staying on Nottingham.',
+      mile: '2.10',
+    },
+    {
+      id: 'route-10',
+      location: 'Nottingham → 35th St',
+      description: 'Left turn beginning final sequence toward finish.',
+      mile: '2.33',
+    },
+    {
+      id: 'route-11',
+      location: '35th → N. John Marshall Dr',
+      description: 'Left turn continuing finish approach.',
+      mile: '2.41',
+    },
+    {
+      id: 'route-12',
+      location: 'N. John Marshall Dr → 36th St',
+      description: 'Right turn guiding runners toward school area.',
+      mile: '2.50',
+    },
+    {
+      id: 'route-13',
+      location: '36th St → Kensington (Finish approach)',
+      description: 'Final straight back to Discovery; finish area visible from corner.',
+      mile: '2.70–3.20',
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-white">
-      <div className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10">
+      <div className="mx-auto max-w-6xl px-6 py-12 sm:px-8 lg:px-10">
         {/* Hero Section */}
         <header className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-gray-100">
           <p className="text-xs uppercase tracking-[0.3em] text-blue-500">Course Details</p>
@@ -27,7 +109,7 @@ const CourseOverview = () => {
             🗺️ Discovery 5K Course Overview
           </h1>
           <p className="mt-4 max-w-2xl text-base text-gray-600">
-            Get familiar with the course route, check out the video walkthrough, and see where our volunteer marshals will be positioned.
+            Get familiar with the course route, check out the video walkthrough, and see all the turns and key locations along the 5K course.
           </p>
         </header>
 
@@ -93,6 +175,58 @@ const CourseOverview = () => {
           </div>
         </section>
 
+        {/* Route Points Table */}
+        <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-2">
+              <Route className="h-6 w-6 text-gray-500" />
+              <h2 className="text-2xl font-semibold text-gray-900">Course Route Points</h2>
+            </div>
+            <p className="text-sm text-gray-600">
+              The 5K course has <strong>13 route points</strong> (turns and key locations) that need volunteer marshals.
+            </p>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                    #
+                  </th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                    Location / Turn
+                  </th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                    Course Description
+                  </th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                    Approx. Mile
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {routePoints.map((point, index) => (
+                  <tr key={point.id} className="hover:bg-gray-50 transition">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {index + 1}
+                    </td>
+                    <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                      {point.location}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-600">
+                      {point.description}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                      {point.mile}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         {/* Interactive Map Section */}
         <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
@@ -152,14 +286,14 @@ const CourseOverview = () => {
           )}
         </section>
 
-        {/* Marshal Volunteer Section */}
+        {/* Marshal Volunteer CTA */}
         <section className="mt-8 rounded-3xl border border-orange-100 bg-orange-50/60 p-6 shadow-sm">
           <div className="flex items-start gap-4">
             <div className="rounded-2xl bg-orange-500 p-3">
               <Navigation className="h-6 w-6 text-white" />
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-semibold text-gray-900">Course Marshals</h2>
+              <h2 className="text-xl font-semibold text-gray-900">Become a Course Marshal</h2>
               <p className="mt-2 text-sm text-gray-600">
                 We need volunteers to position themselves at key points along the course to guide runners and provide encouragement. 
                 Marshals help ensure runners stay on course and cheer them on at critical turns.
@@ -201,4 +335,3 @@ const CourseOverview = () => {
 };
 
 export default CourseOverview;
-
