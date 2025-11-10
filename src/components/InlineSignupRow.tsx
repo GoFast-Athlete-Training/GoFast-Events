@@ -25,39 +25,11 @@ type InlineSignupRowProps = {
 /**
  * InlineSignupRow - SignUpGenius-style inline signup component
  * Shows volunteer name if filled, or inline form if empty
+ * 
+ * PUBLIC PAGE - No authentication required
+ * Edit/Remove buttons are available to everyone (honor system)
+ * Backend verifies email on PUT/DELETE for security
  */
-// Helper to get localStorage key for volunteer email
-const getVolunteerEmailKey = (eventId: string, role: string): string => {
-  return `volunteer-${eventId}-${role}`;
-};
-
-// Helper to store volunteer email in localStorage
-const storeVolunteerEmail = (eventId: string, role: string, email: string): void => {
-  try {
-    localStorage.setItem(getVolunteerEmailKey(eventId, role), email.toLowerCase());
-  } catch (error) {
-    console.warn('Failed to store volunteer email in localStorage:', error);
-  }
-};
-
-// Helper to get volunteer email from localStorage
-const getStoredVolunteerEmail = (eventId: string, role: string): string | null => {
-  try {
-    return localStorage.getItem(getVolunteerEmailKey(eventId, role));
-  } catch (error) {
-    console.warn('Failed to get volunteer email from localStorage:', error);
-    return null;
-  }
-};
-
-// Helper to remove volunteer email from localStorage
-const removeVolunteerEmail = (eventId: string, role: string): void => {
-  try {
-    localStorage.removeItem(getVolunteerEmailKey(eventId, role));
-  } catch (error) {
-    console.warn('Failed to remove volunteer email from localStorage:', error);
-  }
-};
 
 const InlineSignupRow = ({
   slotId,
@@ -72,26 +44,15 @@ const InlineSignupRow = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [canEditDelete, setCanEditDelete] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Check if current user can edit/delete this volunteer signup
+  // Reset editing state when volunteer changes
   useEffect(() => {
-    if (volunteer) {
-      const eventId = getBGR5KEventId();
-      if (eventId) {
-        const mappedRoleName = mapRoleIdToRoleName(slotId);
-        const storedEmail = getStoredVolunteerEmail(eventId, mappedRoleName);
-        // User can edit/delete if they have a stored email for this role
-        // (meaning they signed up for it)
-        setCanEditDelete(!!storedEmail);
-      }
-    } else {
-      setCanEditDelete(false);
+    if (!volunteer) {
       setIsEditing(false);
     }
-  }, [volunteer, slotId]);
+  }, [volunteer]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -158,11 +119,6 @@ const InlineSignupRow = ({
         throw new Error(payload.error || 'Failed to submit signup');
       }
 
-      // Store email in localStorage so user can edit/delete later
-      if (currentEventId) {
-        storeVolunteerEmail(currentEventId, mappedRoleName, email.trim());
-      }
-
       // Reset form
       setName('');
       setEmail('');
@@ -181,15 +137,10 @@ const InlineSignupRow = ({
   const handleEdit = () => {
     if (volunteer) {
       setName(volunteer.name);
-      const eventId = getBGR5KEventId();
-      if (eventId) {
-        const mappedRoleName = mapRoleIdToRoleName(slotId);
-        const storedEmail = getStoredVolunteerEmail(eventId, mappedRoleName);
-        if (storedEmail) {
-          setEmail(storedEmail);
-        }
-      }
+      // Email will need to be re-entered for verification
+      setEmail('');
       setIsEditing(true);
+      setErrorMessage(null);
     }
   };
 
@@ -253,13 +204,6 @@ const InlineSignupRow = ({
         throw new Error(payload.error || 'Failed to update signup');
       }
 
-      // Update stored email if changed
-      const eventIdForUpdate = getBGR5KEventId();
-      if (eventIdForUpdate) {
-        const mappedRoleNameForUpdate = mapRoleIdToRoleName(slotId);
-        storeVolunteerEmail(eventIdForUpdate, mappedRoleNameForUpdate, email.trim());
-      }
-
       setIsEditing(false);
       setName('');
       setEmail('');
@@ -276,15 +220,18 @@ const InlineSignupRow = ({
   const handleDelete = async () => {
     if (!volunteer) return;
 
+    // Prompt user for their email to verify deletion
+    const userEmail = prompt('Please enter your email to confirm deletion:');
+    if (!userEmail || !userEmail.trim()) {
+      setShowDeleteWarning(false);
+      return;
+    }
+
     setIsDeleting(true);
     setErrorMessage(null);
 
     try {
-      const eventIdForDelete = getBGR5KEventId();
-      const mappedRoleNameForDelete = mapRoleIdToRoleName(slotId);
-      const storedEmail = getStoredVolunteerEmail(eventIdForDelete || '', mappedRoleNameForDelete);
-
-      const apiUrl = buildApiUrl(`/api/event-volunteer/${volunteer.id}?email=${encodeURIComponent(storedEmail || '')}`);
+      const apiUrl = buildApiUrl(`/api/event-volunteer/${volunteer.id}?email=${encodeURIComponent(userEmail.trim())}`);
       const response = await fetch(apiUrl, {
         method: 'DELETE',
         headers: {
@@ -306,11 +253,6 @@ const InlineSignupRow = ({
           }
         }
         throw new Error(errorMessage);
-      }
-
-      // Remove stored email from localStorage
-      if (eventIdForDelete) {
-        removeVolunteerEmail(eventIdForDelete, mappedRoleNameForDelete);
       }
 
       setShowDeleteWarning(false);
@@ -359,34 +301,32 @@ const InlineSignupRow = ({
                 <p className="text-xs text-green-700">{volunteer.email}</p>
               )}
             </div>
-            {canEditDelete && (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleEdit}
-                  className="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50 transition"
-                  title="Edit your signup"
-                >
-                  <Edit2 className="h-3 w-3" />
-                  <span>Edit</span>
-                </button>
-                <button
-                  onClick={() => setShowDeleteWarning(true)}
-                  className="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 transition"
-                  title="Remove your signup"
-                >
-                  <Trash2 className="h-3 w-3" />
-                  <span>Remove</span>
-                </button>
-              </div>
-            )}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleEdit}
+                className="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50 transition"
+                title="Edit your signup"
+              >
+                <Edit2 className="h-3 w-3" />
+                <span>Edit</span>
+              </button>
+              <button
+                onClick={() => setShowDeleteWarning(true)}
+                className="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 transition"
+                title="Remove your signup"
+              >
+                <Trash2 className="h-3 w-3" />
+                <span>Remove</span>
+              </button>
+            </div>
           </div>
           {showDeleteWarning && (
             <div className="rounded-lg border-2 border-red-200 bg-red-50 p-3">
               <p className="text-xs font-semibold text-red-900 mb-2">
-                ⚠️ Warning: Only remove your own signup
+                ⚠️ Warning: You must enter YOUR email to confirm
               </p>
               <p className="text-xs text-red-700 mb-3">
-                Please do not remove someone else's signup without asking them first. This action cannot be undone.
+                Please only remove your own signup. You'll be prompted for your email - the backend will verify it matches before deleting. This action cannot be undone.
               </p>
               <div className="flex items-center gap-2">
                 <button
