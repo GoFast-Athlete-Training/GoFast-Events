@@ -8,13 +8,6 @@ const RaceOverview = () => {
     document.title = 'BGR Discovery 5k';
   }, []);
 
-  // Extract route ID from Strava URL for embed
-  // URL format: https://www.strava.com/routes/3420808564668746102
-  const stravaRouteId = BGR5K_CONFIG.stravaRouteUrl.split('/routes/')[1]?.split('?')[0] || '';
-  const stravaEmbedUrl = stravaRouteId 
-    ? `https://www.strava.com/routes/${stravaRouteId}/embed`
-    : null;
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white">
       <div className="mx-auto max-w-6xl px-6 py-12 sm:px-8 lg:px-10">
@@ -31,51 +24,53 @@ const RaceOverview = () => {
         </header>
 
         {/* Strava Route Map Embed - Above everything */}
-        {stravaEmbedUrl && (
-          <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                <Map className="h-5 w-5 text-orange-500" />
-                Course Route Map
-              </h2>
-              <p className="mt-1 text-sm text-gray-600">
-                Interactive course map with elevation profile and turn-by-turn navigation.
-              </p>
-              <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
-                <span>Distance: {BGR5K_CONFIG.distance}</span>
-                <span>•</span>
-                <span>Elevation: {BGR5K_CONFIG.elevation}</span>
-              </div>
+        <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+              <Map className="h-5 w-5 text-orange-500" />
+              Course Route Map
+            </h2>
+            <p className="mt-1 text-sm text-gray-600">
+              Interactive course map with elevation profile and turn-by-turn navigation.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
+              <span>Distance: {BGR5K_CONFIG.distance}</span>
+              <span>•</span>
+              <span>Elevation: {BGR5K_CONFIG.elevation}</span>
             </div>
-            <div className="rounded-xl overflow-hidden border border-gray-200 bg-white">
-              <iframe
-                height="405"
-                width="100%"
-                frameBorder="0"
-                allowTransparency={true}
-                scrolling="no"
-                src={stravaEmbedUrl}
-                title="Strava Route Map"
-                className="w-full"
-                style={{ minHeight: '405px' }}
-              />
-            </div>
-            <div className="mt-3 flex items-center justify-between">
-              <span className="text-xs text-gray-500">
-                Interactive map powered by Strava
-              </span>
-              <a
-                href={BGR5K_CONFIG.stravaRouteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs text-orange-600 hover:text-orange-700 font-medium transition"
-              >
-                <span>Open in Strava</span>
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            </div>
-          </section>
-        )}
+          </div>
+          <div
+            style={{
+              borderRadius: "16px",
+              overflow: "hidden",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            }}
+          >
+            <iframe
+              src="https://www.strava.com/routes/3420808564668746102/embed"
+              width="100%"
+              height="405"
+              frameBorder="0"
+              allowTransparency={true}
+              scrolling="no"
+              title="Strava Course Map"
+            />
+          </div>
+          <div className="mt-3 flex items-center justify-between">
+            <span className="text-xs text-gray-500">
+              Interactive map powered by Strava
+            </span>
+            <a
+              href={BGR5K_CONFIG.stravaRouteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs text-orange-600 hover:text-orange-700 font-medium transition"
+            >
+              <span>Open in Strava</span>
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          </div>
+        </section>
 
         {/* Quick Info Cards */}
         <section className="mt-8 grid gap-6 lg:grid-cols-3">

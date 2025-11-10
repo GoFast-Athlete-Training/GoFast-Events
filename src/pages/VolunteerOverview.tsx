@@ -5,6 +5,8 @@ import { ArrowRight, Users, Navigation, Zap, Trophy, Droplet, Home } from 'lucid
 const VolunteerOverview = () => {
   useEffect(() => {
     document.title = 'BGR Discovery 5k - Volunteer Opportunities';
+    // Scroll to top on page load to prevent "cursor going to the middle"
+    window.scrollTo(0, 0);
   }, []);
 
   const volunteerRoles = [
@@ -48,43 +50,46 @@ const VolunteerOverview = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white">
-      {/* Sticky Top Navigation */}
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+      {/* Sticky Top Navigation - Always visible at top */}
+      <div className="sticky top-0 z-50 w-full bg-white border-b-2 border-orange-200 shadow-lg backdrop-blur-sm bg-opacity-95">
         <div className="mx-auto max-w-5xl px-6 py-4 sm:px-8 lg:px-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
                 to="/"
                 className="inline-flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-orange-600 transition"
+                onClick={() => window.scrollTo(0, 0)}
               >
                 <Home className="h-4 w-4" />
                 <span>Home</span>
               </Link>
               <span className="text-gray-300">|</span>
-              <span className="text-sm font-semibold text-orange-600">Volunteer Opportunities</span>
+              <span className="text-sm font-bold text-orange-600">Volunteer Opportunities</span>
             </div>
             <div className="flex items-center gap-3">
               <Link
-                to="/volunteer/signup"
-                className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-md transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400"
-              >
-                <Users className="h-3 w-3" />
-                <span>Sign Up</span>
-              </Link>
-              <Link
                 to="/volunteer/roster"
                 className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600"
+                onClick={() => window.scrollTo(0, 0)}
               >
-                <span>Roster</span>
+                <span>View Roster</span>
+              </Link>
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-md transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                onClick={() => window.scrollTo(0, 0)}
+              >
+                <Users className="h-3 w-3" />
+                <span>Back to Race</span>
               </Link>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10">
+      <div className="mx-auto max-w-5xl px-6 py-8 sm:px-8 lg:px-10">
         {/* Hero Section */}
-        <header className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-gray-100">
+        <header className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-gray-100 mt-4">
           <p className="text-xs uppercase tracking-[0.3em] text-orange-500">Volunteer Opportunities</p>
           <h1 className="mt-4 text-3xl font-bold text-gray-900 sm:text-4xl">
             Help Make the Discovery 5K Special
@@ -179,10 +184,11 @@ const VolunteerOverview = () => {
         </section>
 
         {/* Navigation */}
-        <section className="mt-8 flex flex-wrap gap-4">
+        <section className="mt-8 mb-8 flex flex-wrap gap-4">
           <Link
             to="/"
             className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600"
+            onClick={() => window.scrollTo(0, 0)}
           >
             <ArrowRight className="h-4 w-4 rotate-180" />
             <span>Back to Welcome</span>
