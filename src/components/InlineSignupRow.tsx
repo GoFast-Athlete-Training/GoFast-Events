@@ -72,18 +72,31 @@ const InlineSignupRow = ({
         }),
       });
 
+      // Check if response is OK before parsing
+      const contentType = response.headers.get('content-type');
+      const isJson = contentType && contentType.includes('application/json');
+      
       if (!response.ok) {
         // Try to parse error response
         let errorMessage = `Server error: ${response.status} ${response.statusText}`;
-        try {
+        if (isJson) {
+          try {
+            const payload = await response.json();
+            errorMessage = payload?.error || payload?.message || errorMessage;
+          } catch (parseError) {
+            console.error('Failed to parse JSON error response:', parseError);
+          }
+        } else {
+          // Response is not JSON (might be HTML error page)
           const errorText = await response.text();
-          const payload = JSON.parse(errorText);
-          errorMessage = payload?.error || payload?.message || errorMessage;
-        } catch (parseError) {
-          // If response is not JSON (might be HTML error page), use status text
-          console.error('Failed to parse error response:', parseError);
+          console.error('Non-JSON error response:', errorText.substring(0, 200));
         }
         throw new Error(errorMessage);
+      }
+
+      // Response is OK - parse JSON
+      if (!isJson) {
+        throw new Error('Server returned non-JSON response');
       }
 
       const payload = await response.json();
