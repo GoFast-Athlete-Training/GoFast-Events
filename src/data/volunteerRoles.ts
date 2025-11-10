@@ -19,8 +19,8 @@ export const volunteerRoles: VolunteerRole[] = [
   {
     id: 'course-marshals',
     name: 'Course Marshals',
-    description: 'Cheer and guide runners at assigned corners so nobody takes a wrong turn.',
-    slotCount: 5,
+    description: 'Cheer and guide runners at assigned corners so nobody takes a wrong turn. 13 positions along the 5K course covering all key turns and transitions.',
+    slotCount: 13,
     isActive: true,
   },
   {
