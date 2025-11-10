@@ -1,139 +1,199 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, ArrowRight, Users, Droplet } from 'lucide-react';
+import { Trophy, ArrowLeft, CheckCircle2, Users } from 'lucide-react';
+import { buildApiUrl } from '../lib/api';
+import { getBGR5KEventId } from '../config/bgr5kConfig';
+import { activeVolunteerSlots } from '../data/volunteerRoles';
+import InlineSignupModal from '../components/InlineSignupModal';
+
+type VolunteerEntry = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  note?: string | null;
+  createdAt: string;
+};
+
+type FinishLineHolder = {
+  id: string;
+  slotId: string;
+  name: string;
+  description: string;
+  volunteer?: VolunteerEntry;
+};
 
 const FinishCheererOverview = () => {
+  const [volunteers, setVolunteers] = useState<VolunteerEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [signupRoleId, setSignupRoleId] = useState('');
+  const [signupRoleName, setSignupRoleName] = useState('');
+
   useEffect(() => {
-    document.title = 'BGR Discovery 5k - Finish Line & Water Station';
+    document.title = 'BGR Discovery 5k - Finish Line Holders';
+    fetchVolunteers();
   }, []);
 
+  const fetchVolunteers = async () => {
+    try {
+      const eventId = getBGR5KEventId();
+      if (!eventId) return;
+
+      const response = await fetch(buildApiUrl(`/api/event-volunteer?eventId=${eventId}`));
+      if (!response.ok) return;
+
+      const payload = (await response.json()) as { success?: boolean; data?: VolunteerEntry[] };
+      if (payload.success && payload.data) {
+        setVolunteers(payload.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch volunteers:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Finish Line Holders - get slots from activeVolunteerSlots
+  const finishLineHolders: FinishLineHolder[] = activeVolunteerSlots
+    .filter((slot) => slot.roleId === 'finish-line-holders')
+    .map((slot) => {
+      // Find volunteer for this position
+      const volunteer = volunteers.find((v) => v.role === slot.roleName);
+
+      return {
+        id: slot.id,
+        slotId: slot.id,
+        name: slot.roleName,
+        description: 'Hold the finish line banner and cheer on every runner as they cross the finish line.',
+        volunteer,
+      };
+    });
+
+  const handleSignupClick = (holder: FinishLineHolder) => {
+    setSignupRoleId(holder.slotId);
+    setSignupRoleName(holder.name);
+    setShowSignupModal(true);
+  };
+
+  const handleSignupSuccess = () => {
+    fetchVolunteers();
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-lime-50 via-white to-white">
-      <div className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10">
-        {/* Hero Section */}
-        <header className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-gray-100">
-          <p className="text-xs uppercase tracking-[0.3em] text-lime-500">Volunteer Role</p>
-          <h1 className="mt-4 text-3xl font-bold text-gray-900 sm:text-4xl">
-            🎉 Finish Line Cheerers & Water Station
-          </h1>
-          <p className="mt-4 max-w-2xl text-base text-gray-600">
-            Be part of the celebration! Finish line cheerers hold the banner, cheer loudly, and celebrate every finish. 
-            Water station volunteers keep runners hydrated and energized throughout the course.
-          </p>
-        </header>
-
-        {/* What Finish Cheerers Do */}
-        <section className="mt-8 rounded-3xl border border-lime-100 bg-lime-50/60 p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">What Finish Line Cheerers Do</h2>
-          <ul className="space-y-3 text-sm text-gray-700">
-            <li className="flex items-start gap-3">
-              <span className="text-lime-500 mt-1">•</span>
-              <span><strong>Hold the Banner:</strong> Create a memorable finish line experience</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-lime-500 mt-1">•</span>
-              <span><strong>Celebrate Every Finish:</strong> Cheer loudly and enthusiastically for every runner</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-lime-500 mt-1">•</span>
-              <span><strong>Create Energy:</strong> Build excitement and motivation for runners approaching the finish</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-lime-500 mt-1">•</span>
-              <span><strong>Capture Moments:</strong> Help create lasting memories for our young athletes</span>
-            </li>
-          </ul>
-        </section>
-
-        {/* Water Station Info */}
-        <section className="mt-8 rounded-3xl border border-blue-100 bg-blue-50/60 p-6 shadow-sm">
-          <div className="flex items-start gap-4">
-            <div className="rounded-2xl bg-blue-500 p-3">
-              <Droplet className="h-6 w-6 text-white" />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-xl font-semibold text-gray-900">Water Station Volunteers</h2>
-              <p className="mt-2 text-sm text-gray-600">
-                Water station volunteers set up cups, keep runners hydrated, and provide encouragement as athletes pass by. 
-                Some stations may also need Gatorade or other sports drinks.
-              </p>
-              <div className="mt-4 p-4 bg-white rounded-xl border border-blue-200">
-                <p className="text-sm font-medium text-blue-900 mb-2">💡 Can You Bring Gatorade?</p>
-                <p className="text-sm text-blue-700">
-                  If you're able to bring Gatorade or other sports drinks for the water station, please note it in your signup! 
-                  This helps keep our runners hydrated and energized.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Roles Available */}
-        <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Available Roles</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Choose the role that fits best for you.
-            </p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 hover:border-lime-200 hover:shadow-md transition">
-              <div className="flex items-center gap-3 mb-4">
-                <Trophy className="h-6 w-6 text-lime-500" />
-                <h3 className="font-semibold text-gray-900">Finish Line Holder</h3>
-              </div>
-              <p className="text-sm text-gray-600">
-                Hold the finish line banner and cheer on every runner as they cross the finish line. 
-                Create an unforgettable moment for our young athletes.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 hover:border-blue-200 hover:shadow-md transition">
-              <div className="flex items-center gap-3 mb-4">
-                <Droplet className="h-6 w-6 text-blue-500" />
-                <h3 className="font-semibold text-gray-900">Water Station Crew</h3>
-              </div>
-              <p className="text-sm text-gray-600">
-                Set up water stations, keep runners hydrated, and provide encouragement. 
-                Option to bring Gatorade for extra support.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Sign Up CTA */}
-        <section className="mt-8 rounded-3xl border border-dashed border-lime-200 bg-lime-50/50 p-8 text-center shadow-sm">
-          <h3 className="text-xl font-semibold text-gray-900">Ready to Celebrate Our Runners?</h3>
-          <p className="mt-3 text-sm text-gray-600">
-            Help make the finish line memorable and keep our runners hydrated. Every role helps create an amazing experience!
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-4">
+    <>
+      <div className="min-h-screen bg-gradient-to-b from-lime-50 via-white to-white">
+        <div className="mx-auto max-w-4xl px-6 py-8 sm:px-8 lg:px-10">
+          {/* Header */}
+          <header className="mb-6">
             <Link
-              to="/volunteer/signup"
-              className="inline-flex items-center gap-2 rounded-full bg-lime-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-lime-600 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:ring-offset-2"
+              to="/volunteer"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-lime-600 hover:text-lime-700 transition mb-4"
             >
-              <Users className="h-4 w-4" />
-              <span>Sign Up for Finish Line / Water Station</span>
-              <ArrowRight className="h-4 w-4" />
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to Volunteer Overview</span>
             </Link>
-          </div>
-        </section>
+            <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+              🎉 Finish Line Holders
+            </h1>
+            <p className="mt-2 text-sm text-gray-600">
+              We need <strong>2 people</strong> to hold the finish line banner and cheer on every runner as they cross the finish line.
+            </p>
+          </header>
 
-        {/* Navigation */}
-        <section className="mt-8 flex flex-wrap gap-4">
-          <Link
-            to="/volunteer"
-            className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-lime-200 hover:text-lime-600"
-          >
-            <ArrowRight className="h-4 w-4 rotate-180" />
-            <span>Back to Volunteer Overview</span>
-          </Link>
-        </section>
+          {/* What Finish Line Holders Do */}
+          <section className="mb-6 rounded-xl border border-lime-100 bg-lime-50/60 p-4">
+            <h2 className="text-sm font-semibold text-gray-900 mb-2">What Finish Line Holders Do</h2>
+            <ul className="space-y-1.5 text-xs text-gray-700">
+              <li className="flex items-start gap-2">
+                <span className="text-lime-500 mt-0.5">•</span>
+                <span>Hold the finish line banner to create a memorable finish experience</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-lime-500 mt-0.5">•</span>
+                <span>Cheer loudly and enthusiastically for every runner as they finish</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-lime-500 mt-0.5">•</span>
+                <span>Create energy and excitement for runners approaching the finish</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-lime-500 mt-0.5">•</span>
+                <span>Help create lasting memories for our young athletes</span>
+              </li>
+            </ul>
+          </section>
+
+          {/* Marshal Note */}
+          <section className="mb-6 rounded-xl border border-blue-100 bg-blue-50/60 p-4">
+            <p className="text-xs text-blue-800">
+              <strong>💡 Finished marshalling early?</strong> If you're done with your marshal position and the pack has cleared, 
+              you can come help hold the finish line banner! Just let us know.
+            </p>
+          </section>
+
+          {/* Finish Line Holder Positions - Compact List */}
+          <section className="space-y-3">
+            {finishLineHolders.map((holder, index) => (
+              <div
+                key={holder.id}
+                className="rounded-xl border border-gray-200 bg-white p-4 hover:border-lime-200 hover:shadow-sm transition"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-2">
+                      <div className="rounded-lg bg-lime-500 px-2.5 py-1.5 flex-shrink-0">
+                        <Trophy className="h-3 w-3 text-white" />
+                      </div>
+                      <h3 className="text-sm font-semibold text-gray-900">{holder.name}</h3>
+                      {holder.volunteer && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                          <CheckCircle2 className="h-3 w-3" />
+                          <span>{holder.volunteer.name}</span>
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-600">{holder.description}</p>
+                  </div>
+                  <div className="flex-shrink-0">
+                    {holder.volunteer ? (
+                      <span className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600">
+                        Filled
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => handleSignupClick(holder)}
+                        className="rounded-lg bg-lime-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-lime-600"
+                      >
+                        Sign Up
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </section>
+
+          {/* Additional Info */}
+          <section className="mt-6 rounded-xl border border-gray-200 bg-white p-4">
+            <p className="text-xs text-gray-600">
+              <strong>Note:</strong> Finish line holders should be at the finish line area by the time the first runners are expected to finish. 
+              If you're marshalling and finish early, you're welcome to join the finish line crew!
+            </p>
+          </section>
+        </div>
       </div>
-    </div>
+
+      {/* Signup Modal */}
+      <InlineSignupModal
+        isOpen={showSignupModal}
+        onClose={() => setShowSignupModal(false)}
+        onSuccess={handleSignupSuccess}
+        roleId={signupRoleId}
+        roleName={signupRoleName}
+      />
+    </>
   );
 };
 
 export default FinishCheererOverview;
-

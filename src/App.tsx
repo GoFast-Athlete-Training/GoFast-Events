@@ -7,6 +7,7 @@ import VolunteerRoster from './pages/VolunteerRoster';
 import RouteOverview from './pages/RouteOverview';
 import PacerOverview from './pages/PacerOverview';
 import FinishCheererOverview from './pages/FinishCheererOverview';
+import WaterStationOverview from './pages/WaterStationOverview';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/volunteer/marshal" element={<RouteOverview />} />
         <Route path="/volunteer/pacer" element={<PacerOverview />} />
         <Route path="/volunteer/finish-cheerer" element={<FinishCheererOverview />} />
+        <Route path="/volunteer/water-station" element={<WaterStationOverview />} />
         <Route path="/volunteer/signup" element={<VolunteerSignup />} />
         <Route path="/volunteer/roster" element={<VolunteerRoster />} />
         <Route path="*" element={<Navigate to="/" replace />} />

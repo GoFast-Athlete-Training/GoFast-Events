@@ -173,9 +173,9 @@ const VolunteerRoster = () => {
                       <tr key={volunteer.id} className="transition hover:bg-orange-50/40">
                         <td className="px-4 py-4 font-medium text-gray-900">{volunteer.name}</td>
                         <td className="hidden px-4 py-4 text-gray-600 md:table-cell">{volunteer.email}</td>
-                              <td className="px-4 py-4 text-gray-700">
+                        <td className="px-4 py-4 text-gray-700">
                                 {volunteer.role}
-                              </td>
+                        </td>
                         <td className="hidden px-4 py-4 text-gray-500 lg:table-cell">
                           {volunteer.note ? volunteer.note : <span className="text-gray-400">—</span>}
                         </td>

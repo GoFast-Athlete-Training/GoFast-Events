@@ -28,12 +28,21 @@ const VolunteerOverview = () => {
     },
     {
       id: 'finish-cheerer',
-      name: 'Finish Line Cheerers & Water Station',
+      name: 'Finish Line Holders',
       icon: Trophy,
       color: 'lime',
-      description: 'Celebrate every finish and keep runners hydrated. Hold the banner, cheer loudly, and manage water stations.',
+      description: 'Hold the banner and cheer on every runner as they cross the finish line.',
       link: '/volunteer/finish-cheerer',
-      details: 'Finish line holders and water station crew',
+      details: '2 positions available',
+    },
+    {
+      id: 'water-station',
+      name: 'Water Stations',
+      icon: Droplet,
+      color: 'blue',
+      description: 'Set up water stations with cups, keep everyone hydrated. Plan for 16 boys - half Gatorade, half water.',
+      link: '/volunteer/water-station',
+      details: '2 hydration stations available',
     },
   ];
 
@@ -118,12 +127,12 @@ const VolunteerOverview = () => {
                         <p className="mt-2 text-sm text-gray-600">{role.description}</p>
                         <p className="mt-2 text-xs font-medium text-gray-500 uppercase tracking-wide">
                           {role.details}
-                        </p>
-                      </div>
+            </p>
+          </div>
                       <ArrowRight className="h-6 w-6 text-gray-400 group-hover:text-gray-600 transition flex-shrink-0 mt-1" />
                     </div>
-                  </div>
-                </div>
+          </div>
+          </div>
               </Link>
             );
           })}

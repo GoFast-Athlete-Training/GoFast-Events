@@ -54,9 +54,9 @@ export const volunteerRoles: VolunteerRole[] = [
   {
     id: 'water-station-crew',
     name: 'Water Station Crew',
-    description: 'Optional future role to set up cups and keep everyone hydrated.',
-    slotCount: 1,
-    isActive: false,
+    description: 'Set up water stations with cups, keep everyone hydrated. Plan for 16 boys - fill cups with half Gatorade and half water.',
+    slotCount: 2,
+    isActive: true,
   },
   {
     id: 'setup-teardown',
@@ -78,6 +78,12 @@ const marshalPositionNames = [
   'Virginia / Nottingham Crew',
 ];
 
+// Specific water station names
+const waterStationNames = [
+  'Water Stop #1 — Massachusetts → Rhode Island',
+  'Water Stop #2 — Nottingham → 35th',
+];
+
 /**
  * Generate individual slots from role definitions
  * This creates SignUpGenius-style individual slots for each role
@@ -97,6 +103,20 @@ export const generateVolunteerSlots = (): VolunteerSlot[] => {
             id: slotId,
             roleId: role.id,
             roleName: slotName, // Use specific position names
+            description: role.description,
+            isActive: true,
+          });
+        }
+      } else if (role.id === 'water-station-crew') {
+        // Special handling for water stations - use specific station names
+        for (let i = 0; i < role.slotCount; i++) {
+          const slotId = `water-station-${i + 1}`;
+          const slotName = waterStationNames[i] || `Water Station ${i + 1}`;
+
+          slots.push({
+            id: slotId,
+            roleId: role.id,
+            roleName: slotName,
             description: role.description,
             isActive: true,
           });

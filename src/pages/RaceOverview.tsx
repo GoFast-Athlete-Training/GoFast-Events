@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { CalendarDays, MapPin, Medal, ArrowRight, Map, Users, Navigation } from 'lucide-react';
+import { CalendarDays, MapPin, Medal, ArrowRight, Map, Users } from 'lucide-react';
 import { BGR5K_CONFIG } from '../config/bgr5kConfig';
 
 const RaceOverview = () => {
@@ -8,9 +8,15 @@ const RaceOverview = () => {
     document.title = 'BGR Discovery 5k';
   }, []);
 
+  // Strava route embed - extract route ID from URL
+  const stravaRouteId = BGR5K_CONFIG.stravaRouteUrl.split('/routes/')[1]?.split('?')[0] || '';
+  const stravaEmbedUrl = stravaRouteId 
+    ? `https://www.strava.com/routes/${stravaRouteId}/embed`
+    : null;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white">
-      <div className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10">
+      <div className="mx-auto max-w-6xl px-6 py-12 sm:px-8 lg:px-10">
         {/* Hero Section */}
         <header className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-gray-100">
           <p className="text-xs uppercase tracking-[0.3em] text-orange-500">Final Run</p>
@@ -22,6 +28,36 @@ const RaceOverview = () => {
             Join us for a celebratory 5K run that honors the journey and celebrates every finish.
           </p>
         </header>
+
+        {/* Strava Route Map - Above everything */}
+        {stravaEmbedUrl && (
+          <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                <Map className="h-5 w-5 text-orange-500" />
+                Course Route Map
+              </h2>
+              <p className="mt-1 text-xs text-gray-600">
+                Interactive course map with elevation profile and turn-by-turn navigation.
+              </p>
+            </div>
+            <div className="rounded-xl overflow-hidden border border-gray-200 bg-white">
+              <iframe
+                height="405"
+                width="100%"
+                frameBorder="0"
+                allowTransparency
+                scrolling="no"
+                src={stravaEmbedUrl}
+                title="Strava Route Map"
+                className="w-full"
+              ></iframe>
+            </div>
+            <div className="mt-3 flex items-center justify-between text-xs text-gray-500">
+              <span>Distance: {BGR5K_CONFIG.distance} • Elevation: {BGR5K_CONFIG.elevation}</span>
+            </div>
+          </section>
+        )}
 
         {/* Quick Info Cards */}
         <section className="mt-8 grid gap-6 lg:grid-cols-3">
@@ -102,44 +138,6 @@ const RaceOverview = () => {
                 </p>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Course Route Preview */}
-        <section className="mt-8 rounded-3xl border border-blue-100 bg-blue-50/60 p-6 shadow-sm">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-start gap-4">
-              <div className="rounded-2xl bg-blue-500 p-3">
-                <Map className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900">5K Course Route</h2>
-                <p className="mt-1 text-sm text-gray-600">Boys on Run 5K Fall 2025</p>
-                <div className="mt-3 flex flex-wrap gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-700">Distance:</span>
-                    <span className="text-gray-600">{BGR5K_CONFIG.distance}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-700">Elevation:</span>
-                    <span className="text-gray-600">{BGR5K_CONFIG.elevation}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-700">Difficulty:</span>
-                    <span className="inline-flex items-center rounded-full bg-lime-100 px-2 py-1 text-xs font-semibold text-lime-700">
-                      {BGR5K_CONFIG.difficulty}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <Link
-              to="/course"
-              className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2.5 text-sm font-semibold text-blue-600 transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200"
-            >
-              <span>View Course Details</span>
-              <ArrowRight className="h-4 w-4" />
-            </Link>
           </div>
         </section>
 
