@@ -105,7 +105,17 @@ const InlineSignupRow = ({
       {/* Slot Info */}
       <div className="mb-3">
         <h3 className="text-sm font-semibold text-gray-900">{slotName}</h3>
-        {description && <p className="mt-1 text-xs text-gray-500">{description}</p>}
+        {description && (
+          <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+            <span className="font-medium text-gray-700">{description.split(' • ')[0]}</span>
+            {description.includes(' • ') && (
+              <>
+                {' • '}
+                <span className="text-gray-500">{description.split(' • ').slice(1).join(' • ')}</span>
+              </>
+            )}
+          </p>
+        )}
       </div>
 
       {/* Filled State */}

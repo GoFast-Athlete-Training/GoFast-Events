@@ -102,12 +102,21 @@ const RouteOverview = () => {
               // Find volunteer for this slot (match by backend role name)
               const volunteer = volunteers.find((v) => v.role === metadata.roleName);
 
+              // Build description with route points and mile markers
+              let displayDescription = metadata.description;
+              if (metadata.details?.routePoints) {
+                displayDescription = `${metadata.details.routePoints} • ${displayDescription}`;
+              }
+              if (metadata.details?.mileMarkers) {
+                displayDescription = `${displayDescription} (${metadata.details.mileMarkers})`;
+              }
+
               return (
                 <InlineSignupRow
                   key={slotId}
                   slotId={slotId}
                   slotName={metadata.roleName}
-                  description={metadata.description}
+                  description={displayDescription}
                   volunteer={volunteer}
                   onSignupSuccess={fetchVolunteers}
                 />
