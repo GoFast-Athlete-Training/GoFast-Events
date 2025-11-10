@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Users, CheckCircle2, XCircle } from 'lucide-react';
 import { activeVolunteerRoles, activeVolunteerSlots } from '../data/volunteerRoles';
 import { buildApiUrl } from '../lib/api';
-import { getBGR5KEventId } from '../config/bgr5kConfig.js';
+import { getBGR5KEventId } from '../config/bgr5kConfig';
 
 type VolunteerEntry = {
   id: string;
