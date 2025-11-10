@@ -41,6 +41,7 @@ const InlineSignupRow = ({
 }: InlineSignupRowProps) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -83,6 +84,7 @@ const InlineSignupRow = ({
           eventId: currentEventId,
           name: name.trim(),
           email: email.trim(),
+          phone: phone.trim() || undefined,
           role: mappedRoleName,
         }),
       });
@@ -122,6 +124,7 @@ const InlineSignupRow = ({
       // Reset form
       setName('');
       setEmail('');
+      setPhone('');
       setErrorMessage(null);
 
       // Refresh parent data
@@ -139,6 +142,8 @@ const InlineSignupRow = ({
       setName(volunteer.name);
       // Email will need to be re-entered for verification
       setEmail('');
+      // Phone is optional - set if available
+      setPhone((volunteer as any).phone || '');
       setIsEditing(true);
       setErrorMessage(null);
     }
@@ -148,6 +153,7 @@ const InlineSignupRow = ({
     setIsEditing(false);
     setName('');
     setEmail('');
+    setPhone('');
     setErrorMessage(null);
   };
 
@@ -176,6 +182,7 @@ const InlineSignupRow = ({
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim(),
+          phone: phone.trim() || undefined,
         }),
       });
 
@@ -207,6 +214,7 @@ const InlineSignupRow = ({
       setIsEditing(false);
       setName('');
       setEmail('');
+      setPhone('');
       setErrorMessage(null);
       onSignupSuccess();
     } catch (error) {
@@ -390,6 +398,14 @@ const InlineSignupRow = ({
               required
               disabled={isSubmitting}
             />
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone (optional)"
+              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200"
+              disabled={isSubmitting}
+            />
             <div className="flex gap-2">
               <button
                 type="submit"
@@ -442,6 +458,14 @@ const InlineSignupRow = ({
               placeholder="your@email.com"
               className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200"
               required
+              disabled={isSubmitting}
+            />
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone (optional)"
+              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200"
               disabled={isSubmitting}
             />
             <button

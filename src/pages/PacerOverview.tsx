@@ -77,7 +77,7 @@ const PacerOverview = () => {
             ⚡ Pacers
           </h1>
           <p className="mt-2 text-sm text-gray-600">
-            Pacers help our 4th and 5th grade athletes maintain their pace, stay motivated, and finish strong.
+            Pacers help our young athletes maintain their pace, stay motivated, and finish strong.
           </p>
         </header>
 
@@ -87,7 +87,7 @@ const PacerOverview = () => {
           <ul className="space-y-1.5 text-xs text-gray-700">
             <li className="flex items-start gap-2">
               <span className="text-purple-500 mt-0.5">•</span>
-              <span>Set an appropriate pace for 4th and 5th graders</span>
+              <span>Set an appropriate pace for our young athletes</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-purple-500 mt-0.5">•</span>
