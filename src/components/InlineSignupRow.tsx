@@ -58,7 +58,8 @@ const InlineSignupRow = ({
 
       const mappedRoleName = mapRoleIdToRoleName(slotId);
 
-      const response = await fetch(buildApiUrl('/api/event-volunteer'), {
+      const apiUrl = buildApiUrl('/api/event-volunteer');
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,12 +73,17 @@ const InlineSignupRow = ({
       });
 
       if (!response.ok) {
-        const payload = await response.json().catch(() => null);
-        const message =
-          typeof payload?.error === 'string'
-            ? payload.error
-            : payload?.message || 'Something went wrong. Please try again.';
-        throw new Error(message);
+        // Try to parse error response
+        let errorMessage = `Server error: ${response.status} ${response.statusText}`;
+        try {
+          const errorText = await response.text();
+          const payload = JSON.parse(errorText);
+          errorMessage = payload?.error || payload?.message || errorMessage;
+        } catch (parseError) {
+          // If response is not JSON (might be HTML error page), use status text
+          console.error('Failed to parse error response:', parseError);
+        }
+        throw new Error(errorMessage);
       }
 
       const payload = await response.json();
@@ -104,15 +110,22 @@ const InlineSignupRow = ({
     <div className={`rounded-lg border border-gray-200 bg-white p-4 ${className}`}>
       {/* Slot Info */}
       <div className="mb-3">
-        <h3 className="text-sm font-semibold text-gray-900">{slotName}</h3>
+        <div className="flex items-start gap-2 mb-2">
+          <h3 className="text-sm font-semibold text-gray-900 flex-1">{slotName}</h3>
+          {description && description.includes(' • ') && (
+            <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">
+              {description.split(' • ')[0]}
+            </span>
+          )}
+        </div>
         {description && (
-          <p className="mt-1 text-xs text-gray-600 leading-relaxed">
-            <span className="font-medium text-gray-700">{description.split(' • ')[0]}</span>
-            {description.includes(' • ') && (
+          <p className="text-xs text-gray-600 leading-relaxed">
+            {description.includes(' • ') ? (
               <>
-                {' • '}
-                <span className="text-gray-500">{description.split(' • ').slice(1).join(' • ')}</span>
+                <span className="text-gray-700">{description.split(' • ').slice(1).join(' • ')}</span>
               </>
+            ) : (
+              <span className="text-gray-700">{description}</span>
             )}
           </p>
         )}

@@ -118,7 +118,7 @@ export type SlotMetadata = {
 export const SLOT_METADATA: Record<string, Omit<SlotMetadata, 'slotId' | 'roleName'>> = {
   // Marshals
   'marshal.1': {
-    description: 'Handle the first turn, then reposition to guide runners to the finish.',
+    description: 'You\'ll handle the critical first turn out of Discovery (Kensington → 37th), ensuring runners make the correct turn. After the pack clears (around 0.22 mi), you\'ll reposition to guide runners on the final straight finish (36th → Kensington, 2.7–3.2 mi). This role helps ensure a safe start and celebratory finish.',
     category: 'marshal',
     details: {
       routePoints: 'Zones 1 + 13',
@@ -128,7 +128,7 @@ export const SLOT_METADATA: Record<string, Omit<SlotMetadata, 'slotId' | 'roleNa
     },
   },
   'marshal.2': {
-    description: 'Cover early Valleywood stretch, then reposition to final turn.',
+    description: 'You\'ll cover the early Valleywood stretch (0.3–0.7 mi) where runners settle into their pace. Once the pack clears, you\'ll loop back via Valleywood to cover the important right turn onto N. John Marshall (2.5 mi), helping guide runners toward the finish. This position requires good timing and repositioning awareness.',
     category: 'marshal',
     details: {
       routePoints: 'Zones 2 + 12',
@@ -138,7 +138,7 @@ export const SLOT_METADATA: Record<string, Omit<SlotMetadata, 'slotId' | 'roleNa
     },
   },
   'marshal.3': {
-    description: 'Guide at Vermont turn, then reposition to 35th Street turn.',
+    description: 'You\'ll guide runners at the Vermont turn (0.75 mi), a key navigation point. Once clear, you\'ll reposition to cover the left turn onto 35th Street (2.4 mi), which is crucial for the final stretch. Your role ensures runners stay on course through these important transitions.',
     category: 'marshal',
     details: {
       routePoints: 'Zones 3 + 11',
@@ -148,7 +148,7 @@ export const SLOT_METADATA: Record<string, Omit<SlotMetadata, 'slotId' | 'roleNa
     },
   },
   'marshal.4': {
-    description: 'Cover Massachusetts turn (watch for traffic), then reposition to Nottingham/35th.',
+    description: 'You\'ll cover the Massachusetts turn (0.82 mi) - watch for traffic here as it\'s a busier intersection. After guiding the pack through, you\'ll reposition via Rockingham to cover the Nottingham/35th intersection (2.3 mi). This role requires extra attention to safety at the Mass turn.',
     category: 'marshal',
     details: {
       routePoints: 'Zones 4 + 10',
@@ -158,7 +158,7 @@ export const SLOT_METADATA: Record<string, Omit<SlotMetadata, 'slotId' | 'roleNa
     },
   },
   'marshal.5': {
-    description: 'Station at Rhode Island turn, then reposition to Rockingham interchange.',
+    description: 'You\'ll station at the Rhode Island turn (1.09 mi), helping runners navigate this important turn. After the pack passes, you\'ll reposition via Rockingham to cover the Rockingham interchange (2.1 mi), ensuring smooth navigation through the mid-course section.',
     category: 'marshal',
     details: {
       routePoints: 'Zones 5 + 9',
@@ -168,7 +168,7 @@ export const SLOT_METADATA: Record<string, Omit<SlotMetadata, 'slotId' | 'roleNa
     },
   },
   'marshal.6': {
-    description: 'Cover Virginia Avenue entry and stay in place along early Virginia segment.',
+    description: 'You\'ll cover the Virginia Avenue entry point (Rhode Island → Virginia left, ≈1.17 mi) and stay in place along the early Virginia segment (through 1.31 mi). This is a single-post position, so you\'ll guide runners through this stretch without needing to reposition.',
     category: 'marshal',
     details: {
       routePoints: 'Zones 6 + 7',
@@ -178,7 +178,7 @@ export const SLOT_METADATA: Record<string, Omit<SlotMetadata, 'slotId' | 'roleNa
     },
   },
   'marshal.7': {
-    description: 'Single post at right turn onto Nottingham, marking final neighborhood stretch.',
+    description: 'You\'ll be stationed at the right turn onto Nottingham (≈2.0 mi), marking the final neighborhood stretch before the finish. This is a single-post position that helps guide tired runners through their last turn toward home. Your encouragement here makes a big difference!',
     category: 'marshal',
     details: {
       routePoints: 'Zone 8',

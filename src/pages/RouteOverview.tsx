@@ -33,18 +33,35 @@ const RouteOverview = () => {
     setIsLoading(true);
     try {
       const eventId = getBGR5KEventId();
-      if (!eventId) return;
+      if (!eventId) {
+        console.warn('Event ID not configured');
+        return;
+      }
 
       // Use page-hydrate endpoint (public - no emails for privacy)
-      const response = await fetch(buildApiUrl(`/api/event-volunteer/page-hydrate?eventId=${eventId}`));
-      if (!response.ok) return;
+      const apiUrl = buildApiUrl(`/api/event-volunteer/page-hydrate?eventId=${eventId}`);
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Failed to fetch volunteers: ${response.status} ${response.statusText}`, errorText);
+        return;
+      }
 
       const payload = (await response.json()) as { success?: boolean; data?: VolunteerEntry[] };
       if (payload.success && payload.data) {
         setVolunteers(payload.data);
+      } else {
+        console.warn('Unexpected response format:', payload);
       }
     } catch (error) {
       console.error('Failed to fetch volunteers:', error);
+      // Don't set volunteers to empty array on error - keep existing data
     } finally {
       setIsLoading(false);
     }
@@ -67,28 +84,28 @@ const RouteOverview = () => {
               <span>Back to Volunteer Overview</span>
             </Link>
             <div className="flex items-start justify-between gap-4">
-              <div>
+              <div className="flex-1">
                 <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
                   🚦 Course Marshals
                 </h1>
                 <p className="mt-2 text-sm text-gray-600">
-                  <strong>Important role!</strong> We need 7 volunteer groups to cover the course.
+                  <strong>Important role!</strong> We need 7 volunteer groups to cover the course. Marshals guide runners at key turns, ensure safety, and provide encouragement along the route.
                 </p>
               </div>
               <button
                 onClick={() => setShowTurnsModal(true)}
-                className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-orange-200 hover:text-orange-600"
+                className="inline-flex items-center gap-2 rounded-lg border-2 border-orange-300 bg-orange-50 px-4 py-2.5 text-sm font-semibold text-orange-700 shadow-sm transition hover:border-orange-400 hover:bg-orange-100"
               >
-                <Route className="h-3 w-3" />
-                <span>View Turns</span>
+                <Route className="h-4 w-4" />
+                <span>View All Turn Details</span>
               </button>
             </div>
           </header>
 
           {/* Quick Info */}
-          <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50/60 p-3">
-            <p className="text-xs text-blue-800">
-              <strong>Most positions involve repositioning:</strong> Start at an early position, then move to a later position once the pack clears.
+          <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50/60 p-4">
+            <p className="text-sm text-blue-900 leading-relaxed">
+              <strong className="font-semibold">Most positions involve repositioning:</strong> You'll start at an early position to guide runners through the initial turns, then move to a later position once the pack clears. This allows us to cover more of the course with fewer volunteers. Detailed turn-by-turn information is available via the "View All Turn Details" button above.
             </p>
           </div>
 
