@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Map, ChevronDown, ChevronUp, Navigation, ArrowRight, Users, Route, Video, Play } from 'lucide-react';
+import { MapPin, Map, ChevronDown, ChevronUp, Navigation, ArrowRight, Users, Route, Video, Play, ExternalLink } from 'lucide-react';
 import { BGR5K_CONFIG } from '../config/bgr5kConfig';
+import { ROUTE_POINTS } from '../config/boysonrun5kvolunteerconfig';
 import CourseTurnsModal from '../components/CourseTurnsModal';
 
 const CourseOverview = () => {
@@ -20,95 +21,6 @@ const CourseOverview = () => {
   const youtubeEmbedUrl = `https://www.youtube.com/embed/${youtubeVideoId}`;
   const youtubeWatchUrl = `https://youtu.be/${youtubeVideoId}`;
 
-  // Strava route embed - extract route ID from URL
-  // URL format: https://www.strava.com/routes/3420808564668746102
-  const stravaRouteId = BGR5K_CONFIG.stravaRouteUrl.split('/routes/')[1]?.split('?')[0] || '';
-  const stravaEmbedUrl = stravaRouteId 
-    ? `https://www.strava.com/routes/${stravaRouteId}/embed`
-    : null;
-
-  // All route points along the course
-  const routePoints = [
-    {
-      id: 'route-1',
-      location: 'Kensington → 37th St',
-      description: 'Right turn uphill from Kensington onto 37th.',
-      mile: '0.22',
-    },
-    {
-      id: 'route-2',
-      location: 'Along Valleywood Dr',
-      description: 'Long gradual curve; steady residential stretch.',
-      mile: '0.30–0.75',
-    },
-    {
-      id: 'route-3',
-      location: 'Valleywood → Vermont Ave',
-      description: 'Left turn just before Old Dominion Dr; short section on Vermont.',
-      mile: '0.75',
-    },
-    {
-      id: 'route-4',
-      location: 'Vermont → Massachusetts Ave',
-      description: 'Left turn onto Massachusetts; cars may approach downhill from the right.',
-      mile: '0.82',
-    },
-    {
-      id: 'route-5',
-      location: 'Massachusetts → Rhode Island Ave (via Rockingham)',
-      description: 'Right turn where Rockingham connects into Rhode Island.',
-      mile: '1.09',
-    },
-    {
-      id: 'route-6',
-      location: 'Rhode Island → Virginia Ave',
-      description: 'Left turn continuing through residential area.',
-      mile: '1.17',
-    },
-    {
-      id: 'route-7',
-      location: 'Virginia Ave corner (Virginia → Virginia transition)',
-      description: 'Gentle bend keeping runners on Virginia Ave alignment.',
-      mile: '1.31',
-    },
-    {
-      id: 'route-8',
-      location: 'Virginia → Nottingham St',
-      description: 'Right turn beginning final neighborhood stretch.',
-      mile: '~2.00',
-    },
-    {
-      id: 'route-9',
-      location: 'Rockingham interchange on Nottingham',
-      description: 'Brief left-then-right transition staying on Nottingham.',
-      mile: '2.10',
-    },
-    {
-      id: 'route-10',
-      location: 'Nottingham → 35th St',
-      description: 'Left turn beginning final sequence toward finish.',
-      mile: '2.33',
-    },
-    {
-      id: 'route-11',
-      location: '35th → N. John Marshall Dr',
-      description: 'Left turn continuing finish approach.',
-      mile: '2.41',
-    },
-    {
-      id: 'route-12',
-      location: 'N. John Marshall Dr → 36th St',
-      description: 'Right turn guiding runners toward school area.',
-      mile: '2.50',
-    },
-    {
-      id: 'route-13',
-      location: '36th St → Kensington (Finish approach)',
-      description: 'Final straight back to Discovery; finish area visible from corner.',
-      mile: '2.70–3.20',
-    },
-  ];
-
   return (
     <>
       <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-white">
@@ -124,35 +36,35 @@ const CourseOverview = () => {
             </p>
           </header>
 
-          {/* Strava Route Embed - Above Video */}
-          {stravaEmbedUrl && (
-            <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-              <div className="mb-4">
+          {/* Strava Route Map Link - Above Video */}
+          <section className="mt-8 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
                 <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
                   <Map className="h-5 w-5 text-orange-500" />
                   Course Route Map
                 </h2>
-                <p className="mt-1 text-xs text-gray-600">
-                  Interactive course map with elevation profile and turn-by-turn navigation.
+                <p className="mt-1 text-sm text-gray-600">
+                  View the interactive course map with elevation profile and turn-by-turn navigation on Strava.
                 </p>
+                <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
+                  <span>Distance: {BGR5K_CONFIG.distance}</span>
+                  <span>•</span>
+                  <span>Elevation: {BGR5K_CONFIG.elevation}</span>
+                </div>
               </div>
-              <div className="rounded-xl overflow-hidden border border-gray-200 bg-white">
-                <iframe
-                  height="405"
-                  width="100%"
-                  frameBorder="0"
-                  allowTransparency
-                  scrolling="no"
-                  src={stravaEmbedUrl}
-                  title="Strava Route Map"
-                  className="w-full"
-                ></iframe>
-              </div>
-              <div className="mt-3 flex items-center justify-between text-xs text-gray-500">
-                <span>Distance: {BGR5K_CONFIG.distance} • Elevation: {BGR5K_CONFIG.elevation}</span>
-              </div>
-            </section>
-          )}
+              <a
+                href={BGR5K_CONFIG.stravaRouteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 whitespace-nowrap"
+              >
+                <Map className="h-4 w-4" />
+                <span>View on Strava</span>
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            </div>
+          </section>
 
           {/* Video Explainer Section - Smaller */}
           <section className="mt-6 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
@@ -249,7 +161,7 @@ const CourseOverview = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {routePoints.slice(0, 5).map((point, index) => (
+                  {ROUTE_POINTS.slice(0, 5).map((point, index) => (
                     <tr key={point.id} className="hover:bg-gray-50 transition">
                       <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
                         {index + 1}
@@ -420,7 +332,7 @@ const CourseOverview = () => {
       <CourseTurnsModal
         isOpen={showTurnsModal}
         onClose={() => setShowTurnsModal(false)}
-        routePoints={routePoints}
+        routePoints={ROUTE_POINTS}
       />
     </>
   );

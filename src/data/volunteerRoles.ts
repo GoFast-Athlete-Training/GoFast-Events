@@ -1,20 +1,67 @@
+/**
+ * Volunteer Roles - Legacy compatibility layer
+ * 
+ * This file now uses the mapper config from boysonrun5kvolunteerconfig.ts
+ * The actual slot mappings are in the config file using the mapper pattern.
+ */
+
+import {
+  VOLUNTEER_SLOT_MAP,
+  getSlotMetadata,
+  getSlotsByCategory,
+  getAllSlotIds,
+  mapSlotIdToRoleName,
+  type SlotMetadata,
+} from '../config/boysonrun5kvolunteerconfig';
+
 export type VolunteerRole = {
   id: string;
   name: string;
   description: string;
-  slotCount: number; // Number of individual slots for this role
+  slotCount: number;
   isActive: boolean;
 };
 
 export type VolunteerSlot = {
-  id: string; // Unique slot ID (e.g., "course-marshal-1", "course-marshal-2")
-  roleId: string; // Parent role ID
-  roleName: string; // Display name for backend (e.g., "Course Marshal 1")
+  id: string; // Frontend slot ID from mapper (e.g., "marshal.1", "pacer.fast")
+  roleId: string; // Category (e.g., "marshal", "pacer")
+  roleName: string; // Backend role name from mapper (e.g., "Starter + Finisher Crew")
   description: string;
   isActive: boolean;
 };
 
-// Role definitions with slot counts
+/**
+ * Generate volunteer slots from the mapper config
+ * Uses the mapper pattern: slot ID → role name
+ */
+export const generateVolunteerSlots = (): VolunteerSlot[] => {
+  const slots: VolunteerSlot[] = [];
+  const allSlotIds = getAllSlotIds();
+
+  allSlotIds.forEach((slotId) => {
+    const metadata = getSlotMetadata(slotId);
+    if (!metadata) return;
+
+    slots.push({
+      id: slotId,
+      roleId: metadata.category,
+      roleName: metadata.roleName, // From mapper
+      description: metadata.description,
+      isActive: true,
+    });
+  });
+
+  return slots;
+};
+
+/**
+ * Get all active volunteer slots
+ */
+export const activeVolunteerSlots = generateVolunteerSlots();
+
+/**
+ * Legacy role definitions (for backward compatibility only)
+ */
 export const volunteerRoles: VolunteerRole[] = [
   {
     id: 'course-marshals',
@@ -66,86 +113,6 @@ export const volunteerRoles: VolunteerRole[] = [
     isActive: false,
   },
 ];
-
-// Specific marshal position names (matching RouteOverview)
-const marshalPositionNames = [
-  'Starter + Finisher Crew',
-  'Valleywood + John Marshall Crew',
-  'Vermont + 35th Street North Crew',
-  'Massachusetts + Nottingham / 35th Crew',
-  'Massachusetts / Rhode Island + Rockingham Crew',
-  'Virginia Avenue Entry Crew',
-  'Virginia / Nottingham Crew',
-];
-
-// Specific water station names
-const waterStationNames = [
-  'Water Stop #1 — Massachusetts → Rhode Island',
-  'Water Stop #2 — Nottingham → 35th',
-];
-
-/**
- * Generate individual slots from role definitions
- * This creates SignUpGenius-style individual slots for each role
- */
-export const generateVolunteerSlots = (): VolunteerSlot[] => {
-  const slots: VolunteerSlot[] = [];
-
-  volunteerRoles.forEach((role) => {
-    if (role.isActive) {
-      // Special handling for course marshals - use specific position names
-      if (role.id === 'course-marshals') {
-        for (let i = 0; i < role.slotCount; i++) {
-          const slotId = `course-marshal-${i + 1}`;
-          const slotName = marshalPositionNames[i] || `Course Marshal ${i + 1}`;
-
-          slots.push({
-            id: slotId,
-            roleId: role.id,
-            roleName: slotName, // Use specific position names
-            description: role.description,
-            isActive: true,
-          });
-        }
-      } else if (role.id === 'water-station-crew') {
-        // Special handling for water stations - use specific station names
-        for (let i = 0; i < role.slotCount; i++) {
-          const slotId = `water-station-${i + 1}`;
-          const slotName = waterStationNames[i] || `Water Station ${i + 1}`;
-
-          slots.push({
-            id: slotId,
-            roleId: role.id,
-            roleName: slotName,
-            description: role.description,
-            isActive: true,
-          });
-        }
-      } else {
-        // For other roles, use standard numbering
-        for (let i = 1; i <= role.slotCount; i++) {
-          const slotId = role.slotCount > 1 ? `${role.id}-${i}` : role.id;
-          const slotName = role.slotCount > 1 ? `${role.name} ${i}` : role.name;
-
-          slots.push({
-            id: slotId,
-            roleId: role.id,
-            roleName: slotName,
-            description: role.description,
-            isActive: true,
-          });
-        }
-      }
-    }
-  });
-
-  return slots;
-};
-
-/**
- * Get all active volunteer slots
- */
-export const activeVolunteerSlots = generateVolunteerSlots();
 
 /**
  * Get active volunteer roles (for backward compatibility)
