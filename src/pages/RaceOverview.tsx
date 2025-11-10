@@ -27,8 +27,8 @@ const RaceOverview = () => {
                 🏃‍♂️ Boys Gotta Run – Discovery 5K
               </h1>
               <p className="mt-4 max-w-2xl text-base text-gray-600">
-                It's the final week of our Boys Gotta Run season. We're keeping it low-key, warm, and all about the kids.
-                Join us for a celebratory 5K run that honors the journey and celebrates every finish.
+                This is the celebratory finale of our inaugural Boys Gotta Run fall session. After 7 weeks of dedication and getting stronger, 
+                these boys get to show what they can do. Join us for a supportive 5K that honors the journey and celebrates every finish.
               </p>
             </div>
           </div>
@@ -135,7 +135,7 @@ const RaceOverview = () => {
             <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-lime-600">Tone</p>
             <p className="mt-2 text-lg font-semibold text-gray-900">Supportive & Celebratory</p>
             <p className="mt-3 text-sm text-gray-600">
-              This isn't a public race. It's our team's victory lap. Keep the vibes easy, encouraging, and fun.
+              This isn't a public race. It's a celebration for our dedicated boys who've worked hard for 7 weeks. Keep the vibes easy, encouraging, and fun.
             </p>
           </div>
         </section>
