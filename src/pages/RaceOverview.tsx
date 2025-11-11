@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarDays, MapPin, Medal, ArrowRight, Map, Users, ExternalLink } from 'lucide-react';
 import { BGR5K_CONFIG } from '../config/bgr5kConfig';
+import Engagement from '../components/Engagement';
 
 const RaceOverview = () => {
   const [showInteractiveMap, setShowInteractiveMap] = useState(false);
@@ -206,6 +207,9 @@ const RaceOverview = () => {
             </div>
           </Link>
         </section>
+
+        {/* Pre & Post Race Engagement */}
+        <Engagement />
       </div>
     </div>
   );

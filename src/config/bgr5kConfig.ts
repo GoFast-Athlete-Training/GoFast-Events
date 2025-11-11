@@ -11,9 +11,9 @@ import { BGR5K_EVENT_CONFIG, getEventId } from './boysonrun5kvolunteerconfig';
 export const BGR5K_CONFIG = BGR5K_EVENT_CONFIG;
 
 /**
- * Get eventId from BGR5K config
+ * Get eventCode from BGR5K config
  */
-export const getBGR5KEventId = (): string => {
-  return getEventId();
+export const getBGR5KEventCode = (): string => {
+  return BGR5K_EVENT_CONFIG.eventCode;
 };
 
