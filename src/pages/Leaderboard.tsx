@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { buildApiUrl } from '../lib/api';
+import api from '../lib/api';
 import { getBGR5KEventId } from '../config/bgr5kConfig';
 import { Trophy, Medal, Clock, MapPin } from 'lucide-react';
 
@@ -35,13 +35,14 @@ const Leaderboard = () => {
     const loadLeaderboard = async () => {
       try {
         const eventCode = getBGR5KEventId(); // Using eventId as eventCode
-        const response = await fetch(buildApiUrl(`/api/events/${eventCode}/leaderboard`));
-        const data = await response.json();
+        // Public endpoint - no auth required, but axios will add token if user is signed in
+        const response = await api.get(`/events/${eventCode}/leaderboard`);
+        const data = response.data;
 
         if (data.success) {
           setEntries(data.data || []);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error loading leaderboard:', error);
       } finally {
         setLoading(false);

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../config/firebase';
-import { buildApiUrl } from '../lib/api';
+import api from '../lib/api';
 import { getBGR5KEventId } from '../config/bgr5kConfig';
 import { User, ArrowRight } from 'lucide-react';
 
@@ -22,39 +22,39 @@ const YouthRegistration = () => {
 
     setLoading(true);
     try {
-      const token = await user.getIdToken();
       const athleteId = localStorage.getItem('athleteId');
       const eventCode = getBGR5KEventId(); // Using eventId as eventCode
 
       if (!athleteId) {
         alert('Please complete parent profile first');
-        navigate('/engagement/parent-profile');
+        navigate('/5k-results/parent-profile');
         return;
       }
 
-      const response = await fetch(buildApiUrl('/api/young-athlete/register'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          athleteId,
-          eventCode,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          grade: formData.grade || null,
-          school: formData.school || null
-        })
+      // Use axios - token automatically added by interceptor
+      const response = await api.post('/young-athlete/register', {
+        athleteId,
+        eventCode,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        grade: formData.grade || null,
+        school: formData.school || null
       });
 
-      const data = await response.json();
+      const data = response.data;
       if (data.success && data.data?.id) {
         localStorage.setItem('youngAthleteId', data.data.id);
-        navigate('/engagement/goals');
+        // Ensure eventId is stored (should already be from ParentProfile, but double-check)
+        if (!localStorage.getItem('eventId')) {
+          localStorage.setItem('eventId', eventCode);
+        }
+        navigate('/5k-results/goals');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error registering young athlete:', error);
+      if (error.response?.status === 401) {
+        navigate('/5k-results');
+      }
     } finally {
       setLoading(false);
     }

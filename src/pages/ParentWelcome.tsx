@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../config/firebase';
-import { buildApiUrl } from '../lib/api';
+import api from '../lib/api';
 import { User, ArrowRight } from 'lucide-react';
 
 const ParentWelcome = () => {
@@ -19,30 +19,20 @@ const ParentWelcome = () => {
     // Check if athlete exists, create if not
     const checkOrCreateAthlete = async () => {
       try {
-        const token = await user.getIdToken();
+        // Use axios - token automatically added by interceptor
+        const response = await api.post('/athlete/create');
         
-        // Try to find or create athlete
-        const response = await fetch(buildApiUrl('/api/athlete/create'), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            firebaseId: user.uid,
-            email: user.email,
-            firstName: user.displayName?.split(' ')[0] || '',
-            lastName: user.displayName?.split(' ').slice(1).join(' ') || ''
-          })
-        });
-
-        const data = await response.json();
+        const data = response.data;
         if (data.success && data.data?.id) {
           setAthleteId(data.data.id);
           localStorage.setItem('athleteId', data.data.id);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error checking athlete:', error);
+        // If 401, user might need to sign in again
+        if (error.response?.status === 401) {
+          navigate('/engagement');
+        }
       } finally {
         setLoading(false);
       }

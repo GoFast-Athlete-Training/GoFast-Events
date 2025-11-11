@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../config/firebase';
-import { buildApiUrl } from '../lib/api';
+import api from '../lib/api';
 import { getBGR5KEventId } from '../config/bgr5kConfig';
 import { Target, ArrowRight } from 'lucide-react';
 
@@ -18,7 +18,7 @@ const PreRaceGoals = () => {
 
   useEffect(() => {
     if (!user) {
-      navigate('/engagement');
+      navigate('/5k-results');
     }
   }, [user, navigate]);
 
@@ -28,37 +28,33 @@ const PreRaceGoals = () => {
 
     setLoading(true);
     try {
-      const token = await user.getIdToken();
       const youngAthleteId = localStorage.getItem('youngAthleteId');
       const eventCode = getBGR5KEventId(); // Using eventId as eventCode
 
       if (!youngAthleteId) {
         alert('Please complete young athlete registration first');
-        navigate('/engagement/youth-registration');
+        navigate('/5k-results/youth-registration');
         return;
       }
 
-      const response = await fetch(buildApiUrl(`/api/young-athlete/${youngAthleteId}/goal`), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          eventCode,
-          targetPace: formData.targetPace || null,
-          targetDistance: formData.targetDistance || null,
-          motivation: formData.motivation || null,
-          feeling: formData.feeling || null
-        })
+      // Use axios - token automatically added by interceptor
+      const response = await api.post(`/young-athlete/${youngAthleteId}/goal`, {
+        eventCode,
+        targetPace: formData.targetPace || null,
+        targetDistance: formData.targetDistance || null,
+        motivation: formData.motivation || null,
+        feeling: formData.feeling || null
       });
 
-      const data = await response.json();
-      if (data.success) {
-        navigate('/engagement/home');
-      }
-    } catch (error) {
-      console.error('Error saving goal:', error);
+        const data = response.data;
+        if (data.success) {
+          navigate('/5k-results/home');
+        }
+      } catch (error: any) {
+        console.error('Error saving goal:', error);
+        if (error.response?.status === 401) {
+          navigate('/5k-results');
+        }
     } finally {
       setLoading(false);
     }

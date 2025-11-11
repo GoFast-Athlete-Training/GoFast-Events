@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, setPersistence, browserLocalPersistence, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { getAuth, setPersistence, browserLocalPersistence, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 
 /**
  * Firebase Configuration - USER AUTH ONLY
@@ -62,6 +62,58 @@ export async function signInWithGoogle() {
     };
   } catch (error) {
     console.error("❌ Firebase: Sign-in error:", error);
+    throw error;
+  }
+}
+
+/**
+ * Sign in with email and password
+ */
+export async function signInWithEmail(email: string, password: string) {
+  try {
+    console.log("🔐 Firebase: Signing in user with email...");
+    
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    const user = result.user;
+    
+    console.log("✅ Firebase: User signed in");
+    console.log("📧 Email:", user.email);
+    console.log("🆔 UID:", user.uid);
+    
+    return {
+      uid: user.uid,
+      email: user.email,
+      name: user.displayName,
+      photoURL: user.photoURL
+    };
+  } catch (error: any) {
+    console.error("❌ Firebase: Sign-in error:", error);
+    throw error;
+  }
+}
+
+/**
+ * Create account with email and password
+ */
+export async function signUpWithEmail(email: string, password: string) {
+  try {
+    console.log("🔐 Firebase: Creating user with email...");
+    
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    const user = result.user;
+    
+    console.log("✅ Firebase: User created");
+    console.log("📧 Email:", user.email);
+    console.log("🆔 UID:", user.uid);
+    
+    return {
+      uid: user.uid,
+      email: user.email,
+      name: user.displayName,
+      photoURL: user.photoURL
+    };
+  } catch (error: any) {
+    console.error("❌ Firebase: Sign-up error:", error);
     throw error;
   }
 }

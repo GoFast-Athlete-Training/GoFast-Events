@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../config/firebase';
-import { buildApiUrl } from '../lib/api';
+import api from '../lib/api';
 import { getBGR5KEventId } from '../config/bgr5kConfig';
 import { Target, Trophy, Wand2, Activity } from 'lucide-react';
 
@@ -32,29 +32,24 @@ const YoungAthleteHome = () => {
 
   useEffect(() => {
     if (!user) {
-      navigate('/engagement');
+      navigate('/5k-results');
       return;
     }
 
     const loadData = async () => {
       try {
-        const token = await user.getIdToken();
         const youngAthleteId = localStorage.getItem('youngAthleteId');
         const athleteId = localStorage.getItem('athleteId');
 
         if (!youngAthleteId) {
-          navigate('/engagement/youth-registration');
+          navigate('/5k-results/youth-registration');
           return;
         }
 
-        // Load young athlete with goals and results
-        const youngAthleteResponse = await fetch(buildApiUrl(`/api/young-athlete/${youngAthleteId}`), {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        const youngAthleteData = await youngAthleteResponse.json();
+        // Load young athlete with goals and results - axios automatically adds token
+        const youngAthleteResponse = await api.get(`/young-athlete/${youngAthleteId}`);
+        
+        const youngAthleteData = youngAthleteResponse.data;
         if (youngAthleteData.success) {
           setYoungAthlete(youngAthleteData.data);
           if (youngAthleteData.data.goals?.length > 0) {
@@ -62,15 +57,11 @@ const YoungAthleteHome = () => {
           }
         }
 
-        // Load parent's activities
+        // Load parent's activities - axios automatically adds token
         if (athleteId) {
-          const activitiesResponse = await fetch(buildApiUrl(`/api/athlete/${athleteId}/activities`), {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
+          const activitiesResponse = await api.get(`/athlete/${athleteId}/activities`);
 
-          const activitiesData = await activitiesResponse.json();
+          const activitiesData = activitiesResponse.data;
           if (activitiesData.success) {
             // Filter for running activities
             const runningActivities = (activitiesData.activities || [])
@@ -79,8 +70,11 @@ const YoungAthleteHome = () => {
             setActivities(runningActivities);
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error loading data:', error);
+        if (error.response?.status === 401) {
+          navigate('/5k-results');
+        }
       } finally {
         setLoading(false);
       }
@@ -94,34 +88,30 @@ const YoungAthleteHome = () => {
 
     setClaiming(activityId);
     try {
-      const token = await user.getIdToken();
       const youngAthleteId = localStorage.getItem('youngAthleteId');
       const athleteId = localStorage.getItem('athleteId');
       const eventCode = getBGR5KEventId(); // Using eventId as eventCode
 
       if (!youngAthleteId || !athleteId) return;
 
-      const response = await fetch(buildApiUrl('/api/event-result/claim'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          eventCode,
-          youngAthleteId,
-          authorAthleteId: athleteId,
-          activityId
-        })
+      // Use axios - token automatically added by interceptor
+      const response = await api.post('/event-result/claim', {
+        eventCode,
+        youngAthleteId,
+        authorAthleteId: athleteId,
+        activityId
       });
 
-      const data = await response.json();
+      const data = response.data;
       if (data.success) {
         alert('Race result claimed! Check the leaderboard.');
-        navigate('/engagement/leaderboard');
+        navigate('/5k-results/leaderboard');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error claiming activity:', error);
+      if (error.response?.status === 401) {
+        navigate('/5k-results');
+      }
     } finally {
       setClaiming(null);
     }
@@ -230,7 +220,7 @@ const YoungAthleteHome = () => {
         {/* Leaderboard Link */}
         <div className="text-center">
           <button
-            onClick={() => navigate('/engagement/leaderboard')}
+            onClick={() => navigate('/5k-results/leaderboard')}
             className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-6 py-3 text-base font-semibold text-white transition hover:bg-purple-700"
           >
             <Trophy className="h-5 w-5" />
