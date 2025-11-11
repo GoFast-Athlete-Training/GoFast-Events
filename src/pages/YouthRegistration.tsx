@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../config/firebase';
 import { buildApiUrl } from '../lib/api';
-import { getBGR5KEventCode } from '../config/bgr5kConfig';
+import { getBGR5KEventId } from '../config/bgr5kConfig';
 import { User, ArrowRight } from 'lucide-react';
 
 const YouthRegistration = () => {
@@ -24,7 +24,7 @@ const YouthRegistration = () => {
     try {
       const token = await user.getIdToken();
       const athleteId = localStorage.getItem('athleteId');
-      const eventCode = getBGR5KEventCode();
+      const eventCode = getBGR5KEventId(); // Using eventId as eventCode
 
       if (!athleteId) {
         alert('Please complete parent profile first');

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { buildApiUrl } from '../lib/api';
-import { getBGR5KEventCode } from '../config/bgr5kConfig';
+import { getBGR5KEventId } from '../config/bgr5kConfig';
 import { Trophy, Medal, Clock, MapPin } from 'lucide-react';
 
 interface LeaderboardEntry {
@@ -34,8 +34,8 @@ const Leaderboard = () => {
 
     const loadLeaderboard = async () => {
       try {
-        const eventCode = getBGR5KEventCode();
-        const response = await fetch(buildApiUrl(`/api/event-result/${eventCode}/leaderboard`));
+        const eventCode = getBGR5KEventId(); // Using eventId as eventCode
+        const response = await fetch(buildApiUrl(`/api/events/${eventCode}/leaderboard`));
         const data = await response.json();
 
         if (data.success) {

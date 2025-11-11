@@ -14,7 +14,6 @@
 
 export const BGR5K_EVENT_CONFIG = {
   eventId: 'cmht9p0800001p21xn5tjp5nc',
-  eventCode: 'BGR5K2025', // Event code for young athlete system
   eventName: 'Boys Gotta Run – Discovery 5K',
   eventDate: '2025-11-12',
   eventTime: '7:55 AM',

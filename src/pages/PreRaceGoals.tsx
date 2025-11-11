@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../config/firebase';
 import { buildApiUrl } from '../lib/api';
-import { getBGR5KEventCode } from '../config/bgr5kConfig';
+import { getBGR5KEventId } from '../config/bgr5kConfig';
 import { Target, ArrowRight } from 'lucide-react';
 
 const PreRaceGoals = () => {
@@ -30,7 +30,7 @@ const PreRaceGoals = () => {
     try {
       const token = await user.getIdToken();
       const youngAthleteId = localStorage.getItem('youngAthleteId');
-      const eventCode = getBGR5KEventCode();
+      const eventCode = getBGR5KEventId(); // Using eventId as eventCode
 
       if (!youngAthleteId) {
         alert('Please complete young athlete registration first');

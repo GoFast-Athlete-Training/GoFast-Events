@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../config/firebase';
 import { buildApiUrl } from '../lib/api';
-import { getBGR5KEventCode } from '../config/bgr5kConfig';
 import { User, ArrowRight } from 'lucide-react';
 
 const ParentWelcome = () => {

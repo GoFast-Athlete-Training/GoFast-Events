@@ -17,10 +17,3 @@ export const getBGR5KEventId = (): string => {
   return getEventId();
 };
 
-/**
- * Get eventCode from BGR5K config
- */
-export const getBGR5KEventCode = (): string => {
-  return BGR5K_EVENT_CONFIG.eventCode;
-};
-
